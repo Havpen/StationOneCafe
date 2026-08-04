@@ -226,15 +226,23 @@
 
 .section-heading {
   display: flex;
-  width: max-content;
+  width: fit-content;
   max-width: 100%;
   flex-direction: column;
   align-items: stretch;
+  box-sizing: border-box;
 }
 
 .section-heading-center {
+  width: 100%;
+  max-width: 100%;
   margin-inline: auto;
   text-align: center;
+  align-items: center;
+}
+
+.section-heading-center .section-heading-rule {
+  width: min(100%, 18rem);
 }
 
 .section-heading-gold {

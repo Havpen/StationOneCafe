@@ -34,7 +34,7 @@ const hero = '/assets/hero.webp';
       />
 
       <h1
-        class="hero-title-gold hero-reveal font-display text-[clamp(3.4375rem,12.5vw,8.125rem)] leading-[0.95] font-semibold tracking-tight"
+        class="hero-title hero-title-gold hero-reveal font-display leading-[0.95] font-semibold tracking-tight"
         style="--hero-delay: 0.2s"
       >
         Station One<span class="sr-only"> Cafe — кафе и ресторан в Гомеле</span>
@@ -89,14 +89,22 @@ const hero = '/assets/hero.webp';
 
   .hero-stack {
     display: grid;
-    width: max-content;
-    max-width: min(100%, 42rem);
+    width: 100%;
+    max-width: 42rem;
     justify-items: center;
     text-align: center;
+    margin-inline: auto;
+    box-sizing: border-box;
+  }
+
+  .hero-title {
+    max-width: 100%;
+    font-size: clamp(2.75rem, 11.5vw, 8.125rem);
   }
 
   .hero-flourish {
-    width: 75%;
+    width: min(75%, 20rem);
+    max-width: 100%;
     margin-bottom: -0.75rem;
     mix-blend-mode: screen;
   }
@@ -123,12 +131,15 @@ const hero = '/assets/hero.webp';
   }
 
   .hero-copy {
-    max-width: 28rem;
+    max-width: min(100%, 28rem);
     margin-top: 2rem;
+    padding-inline: 0.25rem;
   }
 
   .hero-stack > .book-btn {
     margin-top: 3rem;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .hero-title-gold {
