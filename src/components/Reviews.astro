@@ -44,55 +44,56 @@ const reviews = [
       </div>
     </div>
 
-    <div class="mx-auto mt-12 max-w-3xl overflow-hidden" data-review-viewport>
-      <div class="review-track flex" data-review-track>
-        {
-          reviews.map((review) => (
-            <article class="w-full shrink-0">
-              <div class="rounded-2xl border border-white/15 bg-navy-deep/70 p-6 shadow-2xl shadow-black/30 backdrop-blur-sm sm:p-9">
-                <div class="flex items-center gap-4">
-                  <img
-                    src={review.avatar}
-                    alt={`Фото ${review.name}`}
-                    class="size-12 shrink-0 rounded-full border border-gold/50 object-cover"
-                    width="48"
-                    height="48"
-                    loading="lazy"
-                  />
-                  <div class="min-w-0">
-                    <p class="truncate font-medium text-champagne">{review.name}</p>
-                    <p class="mt-0.5 text-sm text-silver">{review.date} · Яндекс Карты</p>
-                  </div>
+    <div
+      class="review-viewport mx-auto mt-12 max-w-3xl"
+      data-review-viewport
+    >
+      {
+        reviews.map((review) => (
+          <article class="review-slide" data-review-slide>
+            <div class="rounded-2xl border border-white/15 bg-navy-deep/70 p-6 shadow-2xl shadow-black/30 backdrop-blur-sm sm:p-9">
+              <div class="flex items-center gap-4">
+                <img
+                  src={review.avatar}
+                  alt={`Фото ${review.name}`}
+                  class="size-12 shrink-0 rounded-full border border-gold/50 object-cover"
+                  width="48"
+                  height="48"
+                  loading="lazy"
+                />
+                <div class="min-w-0">
+                  <p class="truncate font-medium text-champagne">{review.name}</p>
+                  <p class="mt-0.5 text-sm text-silver">{review.date} · Яндекс Карты</p>
                 </div>
-
-                <div class="mt-6 flex gap-1 text-gold" aria-label="Оценка: 5 из 5">
-                  {
-                    Array.from({ length: 5 }).map(() => (
-                      <svg class="size-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                        <path d="m12 2.7 2.85 5.78 6.38.93-4.62 4.5 1.09 6.36L12 17.28l-5.7 3 1.09-6.36-4.62-4.5 6.38-.93L12 2.7Z" />
-                      </svg>
-                    ))
-                  }
-                </div>
-
-                <span class="mt-5 block font-display text-6xl leading-none text-gold/80" aria-hidden="true">“</span>
-                <p class="-mt-5 text-base font-light leading-relaxed text-silver sm:text-lg">
-                  {review.text}
-                </p>
-
-                <a
-                  href={review.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="book-btn mt-6 !px-5 !py-3 text-xs"
-                >
-                  Отзывы <span aria-hidden="true">↗</span>
-                </a>
               </div>
-            </article>
-          ))
-        }
-      </div>
+
+              <div class="mt-6 flex gap-1 text-gold" aria-label="Оценка: 5 из 5">
+                {
+                  Array.from({ length: 5 }).map(() => (
+                    <svg class="size-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path d="m12 2.7 2.85 5.78 6.38.93-4.62 4.5 1.09 6.36L12 17.28l-5.7 3 1.09-6.36-4.62-4.5 6.38-.93L12 2.7Z" />
+                    </svg>
+                  ))
+                }
+              </div>
+
+              <span class="mt-5 block font-display text-6xl leading-none text-gold/80" aria-hidden="true">“</span>
+              <p class="-mt-5 text-base font-light leading-relaxed text-silver sm:text-lg">
+                {review.text}
+              </p>
+
+              <a
+                href={review.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="book-btn mt-6 !px-5 !py-3 text-xs"
+              >
+                Отзывы <span aria-hidden="true">↗</span>
+              </a>
+            </div>
+          </article>
+        ))
+      }
     </div>
 
     <div class="mt-7 flex items-center justify-center gap-4">
@@ -142,25 +143,29 @@ const reviews = [
     transform: translateZ(0);
   }
 
-  .review-track {
+  .review-viewport {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 100%;
     gap: 1rem;
-    transition: transform 0.45s cubic-bezier(0.25, 0.1, 0.25, 1);
-    /* vertical page scroll works; horizontal claimed only after JS lock */
-    touch-action: pan-y;
-    user-select: none;
-    -webkit-user-select: none;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    touch-action: pan-x pan-y;
   }
 
-  .review-track > article {
-    flex: 0 0 auto;
-    width: 100%;
-    min-width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
+  .review-viewport::-webkit-scrollbar {
+    display: none;
   }
 
-  .review-track.is-dragging {
-    transition: none;
+  .review-slide {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    min-width: 0;
   }
 
   .review-control {
@@ -204,41 +209,13 @@ const reviews = [
 
   if (reviewsSection) {
     const viewport = reviewsSection.querySelector<HTMLElement>('[data-review-viewport]');
-    const track = reviewsSection.querySelector<HTMLElement>('[data-review-track]');
+    const slides = [...reviewsSection.querySelectorAll<HTMLElement>('[data-review-slide]')];
     const dots = [...reviewsSection.querySelectorAll<HTMLButtonElement>('[data-review-dot]')];
     const previous = reviewsSection.querySelector<HTMLButtonElement>('[data-review-prev]');
     const next = reviewsSection.querySelector<HTMLButtonElement>('[data-review-next]');
-    const slideCount = track ? track.children.length : 0;
-
+    const slideCount = slides.length;
     let current = 0;
-    let slideWidth = 0;
-    let gap = 16;
-    let startX = 0;
-    let startY = 0;
-    let startOffset = 0;
-    let dragging = false;
-    let axis: 'x' | 'y' | null = null;
-
-    const measure = () => {
-      if (!viewport || !track) return;
-      const styles = getComputedStyle(track);
-      gap = Number.parseFloat(styles.columnGap || styles.gap || '16') || 16;
-      slideWidth = viewport.clientWidth;
-      [...track.children].forEach((child) => {
-        const el = child as HTMLElement;
-        el.style.width = `${slideWidth}px`;
-        el.style.minWidth = `${slideWidth}px`;
-        el.style.maxWidth = `${slideWidth}px`;
-      });
-    };
-
-    const step = () => slideWidth + gap;
-
-    const render = (animate = true) => {
-      if (!track) return;
-      track.classList.toggle('is-dragging', !animate);
-      track.style.transform = `translate3d(${-current * step()}px, 0, 0)`;
-    };
+    let ticking = false;
 
     const updateNavigation = () => {
       dots.forEach((dot, i) => {
@@ -250,150 +227,57 @@ const reviews = [
       if (next) next.disabled = current === slideCount - 1;
     };
 
+    const syncFromScroll = () => {
+      if (!viewport || !slides.length) return;
+      const left = viewport.scrollLeft;
+      const width = slides[0].offsetWidth || viewport.clientWidth;
+      const styles = getComputedStyle(viewport);
+      const gap = Number.parseFloat(styles.columnGap || styles.gap || '16') || 16;
+      const index = Math.round(left / (width + gap));
+      const nextIndex = Math.min(Math.max(index, 0), slideCount - 1);
+      if (nextIndex !== current) {
+        current = nextIndex;
+        updateNavigation();
+      }
+    };
+
     const goTo = (index: number) => {
+      if (!viewport || !slides.length) return;
       current = Math.min(Math.max(index, 0), slideCount - 1);
-      render(true);
+      const width = slides[0].offsetWidth || viewport.clientWidth;
+      const styles = getComputedStyle(viewport);
+      const gap = Number.parseFloat(styles.columnGap || styles.gap || '16') || 16;
+      viewport.scrollTo({ left: current * (width + gap), behavior: 'smooth' });
       updateNavigation();
     };
 
-    const onStart = (x: number, y: number) => {
-      measure();
-      startX = x;
-      startY = y;
-      startOffset = -current * step();
-      dragging = true;
-      axis = null;
-    };
-
-    const onMove = (x: number, y: number, event: TouchEvent | PointerEvent) => {
-      if (!dragging || !track) return;
-
-      const dx = x - startX;
-      const dy = y - startY;
-
-      if (!axis) {
-        if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
-        axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
-        if (axis === 'y') {
-          dragging = false;
-          return;
-        }
-        track.classList.add('is-dragging');
-      }
-
-      if (axis !== 'x') return;
-
-      event.preventDefault();
-      const maxOffset = 0;
-      const minOffset = -((slideCount - 1) * step());
-      let nextOffset = startOffset + dx;
-      // rubber-band a little at edges
-      if (nextOffset > maxOffset) nextOffset = maxOffset + (nextOffset - maxOffset) * 0.35;
-      if (nextOffset < minOffset) nextOffset = minOffset + (nextOffset - minOffset) * 0.35;
-      track.style.transform = `translate3d(${nextOffset}px, 0, 0)`;
-    };
-
-    const onEnd = (x: number) => {
-      if (!dragging && axis !== 'x') {
-        axis = null;
-        return;
-      }
-      if (axis !== 'x') {
-        dragging = false;
-        axis = null;
-        return;
-      }
-
-      const dx = x - startX;
-      dragging = false;
-      axis = null;
-      track?.classList.remove('is-dragging');
-
-      const threshold = Math.max(40, slideWidth * 0.15);
-      if (dx <= -threshold) goTo(current + 1);
-      else if (dx >= threshold) goTo(current - 1);
-      else goTo(current);
-    };
-
-    measure();
-    render(false);
     updateNavigation();
 
     previous?.addEventListener('click', () => goTo(current - 1));
     next?.addEventListener('click', () => goTo(current + 1));
     dots.forEach((dot, i) => dot.addEventListener('click', () => goTo(i)));
 
-    // Touch — primary path on mobile
-    track?.addEventListener(
-      'touchstart',
-      (event) => {
-        if ((event.target as HTMLElement | null)?.closest('a, button')) return;
-        const t = event.changedTouches[0];
-        if (!t) return;
-        onStart(t.clientX, t.clientY);
-      },
-      { passive: true },
-    );
-
-    track?.addEventListener(
-      'touchmove',
-      (event) => {
-        const t = event.changedTouches[0];
-        if (!t) return;
-        onMove(t.clientX, t.clientY, event);
-      },
-      { passive: false },
-    );
-
-    track?.addEventListener(
-      'touchend',
-      (event) => {
-        const t = event.changedTouches[0];
-        onEnd(t ? t.clientX : startX);
-      },
-      { passive: true },
-    );
-
-    track?.addEventListener(
-      'touchcancel',
+    viewport?.addEventListener(
+      'scroll',
       () => {
-        dragging = false;
-        axis = null;
-        track?.classList.remove('is-dragging');
-        goTo(current);
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+          ticking = false;
+          syncFromScroll();
+        });
       },
       { passive: true },
     );
 
-    // Pointer — desktop / pen
-    track?.addEventListener('pointerdown', (event) => {
-      if (event.pointerType === 'touch') return;
-      if (event.button !== 0) return;
-      if ((event.target as HTMLElement | null)?.closest('a, button')) return;
-      onStart(event.clientX, event.clientY);
-      track.setPointerCapture(event.pointerId);
-    });
-
-    track?.addEventListener(
-      'pointermove',
-      (event) => {
-        if (event.pointerType === 'touch') return;
-        onMove(event.clientX, event.clientY, event);
-      },
-      { passive: false },
-    );
-
-    track?.addEventListener('pointerup', (event) => {
-      if (event.pointerType === 'touch') return;
-      if (track.hasPointerCapture(event.pointerId)) {
-        track.releasePointerCapture(event.pointerId);
-      }
-      onEnd(event.clientX);
-    });
+    viewport?.addEventListener('scrollend', syncFromScroll);
 
     window.addEventListener('resize', () => {
-      measure();
-      render(false);
+      if (!viewport || !slides.length) return;
+      const width = slides[0].offsetWidth || viewport.clientWidth;
+      const styles = getComputedStyle(viewport);
+      const gap = Number.parseFloat(styles.columnGap || styles.gap || '16') || 16;
+      viewport.scrollTo({ left: current * (width + gap), behavior: 'auto' });
     });
   }
 </script>
