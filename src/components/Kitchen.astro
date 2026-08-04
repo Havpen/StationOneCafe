@@ -68,12 +68,14 @@ const dishes = [
 </section>
 
 <style>
+  /* Visible without JS (Netlify CSP / no-JS). Motion still enhances when .is-visible. */
   .kitchen-card {
-    opacity: 0;
+    opacity: 1;
   }
 
   @media (min-width: 768px) {
-    .kitchen-card {
+    html.js-ready [data-kitchen]:not(.is-visible) .kitchen-card {
+      opacity: 0;
       transform: translateY(1.5rem) scale(0.96);
     }
 
@@ -84,8 +86,12 @@ const dishes = [
   }
 
   @media (max-width: 767px) {
-    .kitchen-card {
+    html.js-ready .kitchen-card:not(.is-visible) {
+      opacity: 0;
       transform: translateY(1.25rem);
+    }
+
+    .kitchen-card {
       transition:
         opacity 0.7s ease,
         transform 0.7s ease;
@@ -111,7 +117,9 @@ const dishes = [
   @media (prefers-reduced-motion: reduce) {
     .kitchen-card,
     .kitchen-card.is-visible,
-    [data-kitchen].is-visible .kitchen-card {
+    [data-kitchen].is-visible .kitchen-card,
+    html.js-ready [data-kitchen]:not(.is-visible) .kitchen-card,
+    html.js-ready .kitchen-card:not(.is-visible) {
       opacity: 1;
       transform: none;
       transition: none;
@@ -121,6 +129,7 @@ const dishes = [
 </style>
 
 <script>
+  document.documentElement.classList.add('js-ready');
   const section = document.querySelector<HTMLElement>('[data-kitchen]');
   if (section) {
     const cards = [...section.querySelectorAll<HTMLElement>('.kitchen-card')];

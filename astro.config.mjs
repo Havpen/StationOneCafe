@@ -3,7 +3,7 @@ import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
 /** Production domain — change before deploy if different */
-const SITE = 'https://stationonegomel.by';
+const SITE = 'https://stationonecafe.netlify.app';
 
 export default defineConfig({
   site: SITE,
