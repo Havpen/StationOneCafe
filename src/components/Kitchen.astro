@@ -1,0 +1,171 @@
+---
+const dishes = [
+  {
+    src: '/assets/kitchen-breakfast.webp',
+    alt: 'Завтрак в Station One Cafe, Гомель',
+    label: 'Завтрак',
+  },
+  {
+    src: '/assets/kitchen-lunch.webp',
+    alt: 'Обед в Station One Cafe, Гомель',
+    label: 'Обед',
+  },
+  {
+    src: '/assets/kitchen-dinner.webp',
+    alt: 'Ужин в Station One Cafe, Гомель',
+    label: 'Ужин',
+  },
+];
+---
+
+<section id="kitchen" class="section-pad bg-navy-deep" data-kitchen>
+  <div class="mx-auto max-w-7xl">
+    <div class="max-w-xl">
+      <p class="text-xs font-medium uppercase tracking-[0.3em] text-gold">Кухня</p>
+      <div class="section-heading mt-4">
+        <h2
+          class="section-heading-gold font-display text-4xl font-semibold leading-tight md:text-5xl"
+        >
+          Вкус, который хочется разделить
+        </h2>
+        <span class="section-heading-rule" aria-hidden="true"></span>
+      </div>
+      <p class="mt-5 text-base font-light leading-relaxed text-silver">
+        Меню кафе Station One в Гомеле — авторская подача и знакомые блюда: от лёгкого
+        обеда до вечернего десерта. Откройте полное меню или закажите доставку.
+      </p>
+      <a
+        href="/menu-station-one.pdf"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="book-btn mt-8"
+      >
+        Меню
+      </a>
+    </div>
+
+    <div class="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        dishes.map((dish, index) => (
+          <figure
+            class="kitchen-card group relative overflow-hidden"
+            style={`--dish-delay: ${index * 0.2}s`}
+          >
+            <img
+              src={dish.src}
+              alt={dish.alt}
+              class="aspect-[3/4] w-full object-cover transition duration-700 group-hover:scale-[1.04]"
+              loading="lazy"
+            />
+            <figcaption class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-navy-deep/90 to-transparent px-4 pb-4 pt-16">
+              <span class="font-display text-xl text-champagne">{dish.label}</span>
+            </figcaption>
+          </figure>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .kitchen-card {
+    opacity: 0;
+  }
+
+  @media (min-width: 768px) {
+    .kitchen-card {
+      transform: translateY(1.5rem) scale(0.96);
+    }
+
+    [data-kitchen].is-visible .kitchen-card {
+      animation: kitchen-card-reveal 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation-delay: var(--dish-delay, 0s);
+    }
+  }
+
+  @media (max-width: 767px) {
+    .kitchen-card {
+      transform: translateY(1.25rem);
+      transition:
+        opacity 0.7s ease,
+        transform 0.7s ease;
+    }
+
+    .kitchen-card.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes kitchen-card-reveal {
+    from {
+      opacity: 0;
+      transform: translateY(1.5rem) scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .kitchen-card,
+    .kitchen-card.is-visible,
+    [data-kitchen].is-visible .kitchen-card {
+      opacity: 1;
+      transform: none;
+      transition: none;
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  const section = document.querySelector<HTMLElement>('[data-kitchen]');
+  if (section) {
+    const cards = [...section.querySelectorAll<HTMLElement>('.kitchen-card')];
+    const desktopQuery = window.matchMedia('(min-width: 768px)');
+    let observer: IntersectionObserver | null = null;
+
+    const clear = () => {
+      observer?.disconnect();
+      observer = null;
+      section.classList.remove('is-visible');
+      cards.forEach((card) => card.classList.remove('is-visible'));
+    };
+
+    const setup = () => {
+      clear();
+
+      if (!('IntersectionObserver' in window)) {
+        section.classList.add('is-visible');
+        cards.forEach((card) => card.classList.add('is-visible'));
+        return;
+      }
+
+      if (desktopQuery.matches) {
+        observer = new IntersectionObserver(
+          ([entry]) => {
+            section.classList.toggle('is-visible', entry.isIntersecting);
+          },
+          { threshold: 0.18, rootMargin: '0px 0px -6% 0px' },
+        );
+        observer.observe(section);
+        return;
+      }
+
+      observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            entry.target.classList.toggle('is-visible', entry.isIntersecting);
+          });
+        },
+        { threshold: 1 / 3 },
+      );
+      cards.forEach((card) => observer?.observe(card));
+    };
+
+    setup();
+    desktopQuery.addEventListener('change', setup);
+  }
+</script>

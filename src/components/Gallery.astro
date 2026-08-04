@@ -1,0 +1,134 @@
+---
+const photos = [
+  '/assets/gallery-01.webp',
+  '/assets/gallery-02.webp',
+  '/assets/gallery-03.webp',
+  '/assets/gallery-04.webp',
+  '/assets/gallery-05.webp',
+  '/assets/gallery-06.webp',
+  '/assets/gallery-07.webp',
+  '/assets/gallery-08.webp',
+  '/assets/gallery-09.webp',
+  '/assets/gallery-10.webp',
+  '/assets/gallery-11.webp',
+  '/assets/gallery-12.webp',
+  '/assets/gallery-13.webp',
+  '/assets/gallery-14.webp',
+  '/assets/gallery-15.webp',
+];
+
+const strip = [...photos, ...photos];
+---
+
+<section id="gallery" class="relative overflow-hidden bg-navy py-10 md:py-14" data-gallery>
+  <div class="pointer-events-none absolute -left-24 top-0 h-72 w-72 rounded-full bg-gold/5 blur-3xl"></div>
+
+  <div class="relative mx-auto mb-6 max-w-7xl px-5 md:mb-8 md:px-10 lg:px-16">
+    <div class="section-heading section-heading-center">
+      <h2
+        class="section-heading-gold font-display text-4xl font-semibold leading-tight md:text-5xl lg:text-6xl"
+      >
+        Галерея
+      </h2>
+      <span class="section-heading-rule" aria-hidden="true"></span>
+    </div>
+  </div>
+
+  <div class="gallery-marquee" aria-label="Фотографии кафе">
+    <div class="gallery-track">
+      {
+        strip.map((src, index) => (
+          <figure class="gallery-item">
+            <img
+              src={src}
+              alt={index < photos.length ? `Station One Cafe — фото ${index + 1}` : ''}
+              width="640"
+              height="853"
+              loading="lazy"
+              decoding="async"
+              aria-hidden={index >= photos.length ? 'true' : undefined}
+            />
+          </figure>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .gallery-marquee {
+    overflow: hidden;
+    width: 100%;
+    mask-image: linear-gradient(
+      90deg,
+      transparent 0%,
+      #000 4%,
+      #000 96%,
+      transparent 100%
+    );
+  }
+
+  .gallery-track {
+    display: flex;
+    width: max-content;
+    gap: 0.85rem;
+    padding-block: 0.25rem;
+    animation: gallery-drift 160s linear infinite;
+    will-change: transform;
+  }
+
+  .gallery-item {
+    margin: 0;
+    flex: 0 0 auto;
+    width: min(42vw, 16.5rem);
+    overflow: hidden;
+    background: rgb(22 23 26 / 0.45);
+  }
+
+  @media (min-width: 768px) {
+    .gallery-item {
+      width: 18.5rem;
+    }
+
+    .gallery-track {
+      gap: 1rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .gallery-item {
+      width: 20rem;
+    }
+  }
+
+  .gallery-item img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    height: auto;
+    object-fit: cover;
+  }
+
+  @keyframes gallery-drift {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gallery-track {
+      animation: none;
+      overflow-x: auto;
+      max-width: 100%;
+      padding-inline: 1.25rem;
+      scrollbar-width: thin;
+    }
+
+    .gallery-marquee {
+      mask-image: none;
+    }
+  }
+</style>

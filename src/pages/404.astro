@@ -1,0 +1,36 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { SITE_URL, site } from '../data/site';
+---
+
+<Layout
+  title={`Страница не найдена — ${site.name}`}
+  description={`Страница не найдена. Вернитесь на главную ${site.name} или забронируйте стол по телефону.`}
+  noindex={true}
+>
+  <main
+    id="main-content"
+    class="flex min-h-[100svh] flex-col items-center justify-center bg-navy px-5 py-24 text-center"
+  >
+    <p class="text-xs font-medium uppercase tracking-[0.3em] text-gold">404</p>
+    <h1 class="mt-4 font-display text-4xl font-semibold text-champagne md:text-6xl">
+      Страница не найдена
+    </h1>
+    <p class="mt-5 max-w-md text-base font-light text-silver">
+      Такой страницы нет. Перейдите на главную Station One Cafe или позвоните для брони.
+    </p>
+    <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
+      <a href="/" class="book-btn">На главную</a>
+      <a href={`tel:${site.phone}`} class="text-sm text-gold transition hover:text-champagne">
+        {site.phoneDisplay}
+      </a>
+    </div>
+    <nav class="mt-12 flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm text-silver" aria-label="Разделы сайта">
+      <a href="/#kitchen" class="hover:text-champagne">Кухня</a>
+      <a href="/#delivery" class="hover:text-champagne">Доставка</a>
+      <a href="/#map" class="hover:text-champagne">Как нас найти</a>
+      <a href="/#contacts" class="hover:text-champagne">Бронь</a>
+    </nav>
+    <p class="mt-8 text-xs text-silver/50">{SITE_URL}</p>
+  </main>
+</Layout>

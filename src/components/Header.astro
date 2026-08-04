@@ -1,0 +1,514 @@
+---
+const phone = '+375333335233';
+
+const links = [
+  { href: '#kitchen', label: 'Кухня' },
+  { href: '#gallery', label: 'Галерея' },
+  { href: '#hookah', label: 'Кальяны' },
+  { href: '#delivery', label: 'Доставка' },
+  { href: '#reviews', label: 'Отзывы' },
+  { href: '#map', label: 'Как нас найти' },
+  { href: '#contacts', label: 'Контакты' },
+];
+---
+
+<header class="site-header" data-header>
+  <div class="site-header-bar">
+    <div class="site-header-inner">
+      <a href="#top" class="site-header-logo">
+        <img
+          src="/logo-mini.webp"
+          alt="Station One Cafe"
+          width="48"
+          height="80"
+          decoding="async"
+        />
+      </a>
+
+      <button
+        type="button"
+        class="burger-btn"
+        aria-label="Открыть меню"
+        aria-expanded="false"
+        aria-controls="site-menu"
+        data-burger
+      >
+        <span class="burger-line"></span>
+        <span class="burger-line"></span>
+        <span class="burger-line"></span>
+      </button>
+    </div>
+  </div>
+
+  <div id="site-menu" class="site-menu" data-menu aria-hidden="true">
+    <button type="button" class="site-menu-backdrop" aria-label="Закрыть меню" data-menu-close></button>
+
+    <div class="site-menu-panel">
+      <nav class="menu-links" aria-label="Основная навигация">
+        {
+          links.map((link) => (
+            <a href={link.href} class="menu-item" data-menu-link tabindex="-1">
+              {link.label}
+            </a>
+          ))
+        }
+      </nav>
+
+      <a
+        href={`tel:${phone}`}
+        class="book-btn menu-book"
+        data-menu-link
+        tabindex="-1"
+      >
+        Забронируйте
+      </a>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: fixed;
+    inset-inline: 0;
+    top: 0;
+    z-index: 50;
+  }
+
+  .site-header-bar {
+    position: relative;
+    z-index: 60;
+    border-bottom: 1px solid rgb(255 255 255 / 0.05);
+    background: rgb(33 34 38 / 0.7);
+    backdrop-filter: blur(12px);
+  }
+
+  .site-header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    max-width: 80rem;
+    margin-inline: auto;
+    padding: 0.625rem 1.25rem;
+    padding-top: max(0.625rem, env(safe-area-inset-top));
+    padding-right: max(1.25rem, env(safe-area-inset-right));
+    padding-left: max(1.25rem, env(safe-area-inset-left));
+  }
+
+  @media (min-width: 768px) {
+    .site-header-inner {
+      padding-inline: 2.5rem;
+      padding-right: max(2.5rem, env(safe-area-inset-right));
+      padding-left: max(2.5rem, env(safe-area-inset-left));
+    }
+  }
+
+  .site-header-logo {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+  }
+
+  .site-header-logo img {
+    display: block;
+    height: 2.75rem;
+    width: auto;
+  }
+
+  @media (min-width: 768px) {
+    .site-header-logo img {
+      height: 3rem;
+    }
+  }
+
+  .burger-btn {
+    position: relative;
+    z-index: 61;
+    display: flex;
+    width: 2.75rem;
+    height: 2.75rem;
+    flex-shrink: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .burger-line {
+    display: block;
+    width: 1.35rem;
+    height: 1.5px;
+    border-radius: 999px;
+    background: #d29f22;
+    transform-origin: center;
+    transition:
+      transform 0.3s ease,
+      opacity 0.2s ease,
+      width 0.3s ease;
+  }
+
+  .burger-btn:hover .burger-line {
+    width: 1.5rem;
+  }
+
+  .site-header.is-open .burger-line:nth-child(1) {
+    transform: translateY(7.9px) rotate(45deg);
+  }
+
+  .site-header.is-open .burger-line:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+
+  .site-header.is-open .burger-line:nth-child(3) {
+    transform: translateY(-7.9px) rotate(-45deg);
+  }
+
+  .site-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 55;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .site-menu.is-mounted {
+    visibility: visible;
+  }
+
+  .site-header.is-open .site-menu {
+    pointer-events: auto;
+  }
+
+  .site-menu-backdrop {
+    position: absolute;
+    inset: 0;
+    border: 0;
+    background: rgb(22 23 26 / 0.35);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .site-header.is-open .site-menu-backdrop {
+    opacity: 1;
+  }
+
+  .site-menu-panel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.85rem;
+    width: 100%;
+    height: 100%;
+    height: 100dvh;
+    max-height: none;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 5.25rem max(1.25rem, env(safe-area-inset-right))
+      max(2rem, env(safe-area-inset-bottom)) max(1.25rem, env(safe-area-inset-left));
+    background: rgb(22 23 26 / 0.92);
+    border-bottom: none;
+    box-shadow: none;
+    opacity: 0;
+    transform: translateY(-105%);
+    transition:
+      transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.4s ease;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  @media (min-width: 768px) {
+    .site-menu-panel {
+      height: 50dvh;
+      max-height: 50dvh;
+      justify-content: center;
+      gap: 1.25rem;
+      padding: 4.25rem max(1.5rem, env(safe-area-inset-right)) 1.25rem
+        max(1.5rem, env(safe-area-inset-left));
+      background: rgb(22 23 26 / 0.94);
+      border-bottom: 1px solid rgb(210 159 34 / 0.22);
+      box-shadow: 0 18px 40px rgb(0 0 0 / 0.45);
+    }
+  }
+
+  .site-header.is-open .site-menu-panel {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .menu-links {
+    display: flex;
+    width: 100%;
+    max-width: 28rem;
+    flex: 0 0 auto;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 0.69rem;
+    text-align: center;
+  }
+
+  .menu-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    min-height: 3.85rem;
+    width: 100%;
+    padding: 1.1rem 1rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 5.5vw, 1.875rem);
+    line-height: 1.1;
+    color: #f9e498;
+    opacity: 0;
+    transform: translateY(-0.6rem);
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s ease,
+      color 0.2s ease,
+      background-color 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+    border-radius: 0.35rem;
+  }
+
+  .menu-item:active {
+    background: rgb(210 159 34 / 0.08);
+  }
+
+  @media (min-width: 768px) {
+    .menu-links {
+      max-width: 20rem;
+      align-items: center;
+      gap: 0.9rem;
+    }
+
+    .menu-item {
+      min-height: 0;
+      width: auto;
+      padding: 0.35rem 0.5rem;
+      font-size: 1.5rem;
+    }
+
+    .menu-item:active {
+      background: transparent;
+    }
+  }
+
+  .menu-item:hover {
+    color: #d29f22;
+  }
+
+  .menu-book {
+    flex: 0 0 auto;
+    width: 100%;
+    max-width: 28rem;
+    min-height: 3.5rem;
+    margin-top: 0.25rem;
+    padding-inline: 1.5rem !important;
+    padding-block: 1rem !important;
+    font-size: 1rem !important;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  @media (min-width: 768px) {
+    .menu-book {
+      width: auto;
+      max-width: none;
+      min-height: 0;
+      margin-top: 0;
+      padding-inline: 1.75rem !important;
+      padding-block: 0.875rem !important;
+      font-size: 0.875rem !important;
+    }
+  }
+
+  .site-header.is-open .menu-item {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .site-header.is-open .menu-book {
+    opacity: 1;
+  }
+
+  .site-header.is-open .menu-links .menu-item:nth-child(1) {
+    transition-delay: 0.05s;
+  }
+  .site-header.is-open .menu-links .menu-item:nth-child(2) {
+    transition-delay: 0.1s;
+  }
+  .site-header.is-open .menu-links .menu-item:nth-child(3) {
+    transition-delay: 0.15s;
+  }
+  .site-header.is-open .menu-links .menu-item:nth-child(4) {
+    transition-delay: 0.2s;
+  }
+  .site-header.is-open .menu-links .menu-item:nth-child(5) {
+    transition-delay: 0.25s;
+  }
+  .site-header.is-open .menu-links .menu-item:nth-child(6) {
+    transition-delay: 0.3s;
+  }
+  .site-header.is-open .menu-links .menu-item:nth-child(7) {
+    transition-delay: 0.35s;
+  }
+  .site-header.is-open .menu-book {
+    transition-delay: 0.4s;
+  }
+</style>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-header]');
+  const burger = document.querySelector<HTMLButtonElement>('[data-burger]');
+  const menu = document.querySelector<HTMLElement>('[data-menu]');
+  const menuLinks = document.querySelectorAll<HTMLElement>('[data-menu-link]');
+  const closeTargets = document.querySelectorAll<HTMLElement>('[data-menu-link], [data-menu-close]');
+  const CLOSE_MS = 560;
+
+  if (header && burger && menu) {
+    let closeTimer = 0;
+    let lockedY = 0;
+    let pendingHash: string | null = null;
+
+    const lockScroll = () => {
+      lockedY = window.scrollY;
+      // Desktop only: reserve scrollbar width so layout doesn't jump.
+      // Phones have overlay scrollbars (width 0) — no strip needed.
+      const touchUI = window.matchMedia('(hover: none), (pointer: coarse)').matches;
+      const sbw = touchUI ? 0 : Math.max(0, window.innerWidth - document.documentElement.clientWidth);
+      if (sbw > 0) {
+        document.documentElement.style.setProperty('--menu-sbw', `${sbw}px`);
+      } else {
+        document.documentElement.style.removeProperty('--menu-sbw');
+      }
+      document.documentElement.classList.add('is-menu-open');
+      document.body.classList.add('is-menu-open');
+      document.body.style.top = `-${lockedY}px`;
+    };
+
+    const unlockScroll = (toY?: number) => {
+      const y = toY ?? lockedY;
+      const html = document.documentElement;
+      const prevBehavior = html.style.scrollBehavior;
+      html.style.scrollBehavior = 'auto';
+
+      html.classList.remove('is-menu-open');
+      document.body.classList.remove('is-menu-open');
+      document.body.style.top = '';
+      html.style.removeProperty('--menu-sbw');
+
+      html.scrollTop = y;
+      document.body.scrollTop = y;
+      window.scrollTo(0, y);
+
+      requestAnimationFrame(() => {
+        html.style.scrollBehavior = prevBehavior;
+      });
+    };
+
+    /** Target Y while body is still scroll-locked */
+    const targetYFromHash = (hash: string) => {
+      const id = hash.replace(/^#/, '');
+      const target = document.getElementById(id);
+      if (!target) return null;
+      const headerH = header.offsetHeight || 72;
+      return Math.max(0, lockedY + target.getBoundingClientRect().top - headerH - 12);
+    };
+
+    const setOpen = (open: boolean) => {
+      window.clearTimeout(closeTimer);
+
+      if (open) {
+        pendingHash = null;
+        lockScroll();
+        menu.classList.add('is-mounted');
+        menu.setAttribute('aria-hidden', 'false');
+        menuLinks.forEach((link) => link.removeAttribute('tabindex'));
+
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            header.classList.add('is-open');
+          });
+        });
+      } else {
+        header.classList.remove('is-open');
+        menu.setAttribute('aria-hidden', 'true');
+        menuLinks.forEach((link) => link.setAttribute('tabindex', '-1'));
+
+        const hash = pendingHash;
+        pendingHash = null;
+
+        closeTimer = window.setTimeout(() => {
+          if (header.classList.contains('is-open')) return;
+
+          menu.classList.remove('is-mounted');
+
+          if (hash) {
+            const y = targetYFromHash(hash);
+            // Stay at current place, then smooth-scroll to the section
+            unlockScroll(lockedY);
+            if (y != null) {
+              history.pushState(null, '', hash);
+              requestAnimationFrame(() => {
+                window.scrollTo({ top: y, behavior: 'smooth' });
+              });
+            }
+          } else {
+            unlockScroll();
+          }
+        }, CLOSE_MS);
+      }
+
+      burger.setAttribute('aria-expanded', String(open));
+      burger.setAttribute('aria-label', open ? 'Закрыть меню' : 'Открыть меню');
+    };
+
+    burger.addEventListener('click', () => {
+      setOpen(!header.classList.contains('is-open'));
+    });
+
+    closeTargets.forEach((el) => {
+      el.addEventListener('click', (event) => {
+        const href = el.getAttribute('href');
+
+        if (href?.startsWith('tel:')) {
+          event.preventDefault();
+          setOpen(false);
+          window.setTimeout(() => {
+            window.location.href = href;
+          }, CLOSE_MS);
+          return;
+        }
+
+        if (href?.startsWith('#')) {
+          event.preventDefault();
+          pendingHash = href;
+          setOpen(false);
+          return;
+        }
+
+        setOpen(false);
+      });
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && header.classList.contains('is-open')) {
+        setOpen(false);
+      }
+    });
+  }
+</script>

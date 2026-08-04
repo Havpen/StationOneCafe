@@ -1,0 +1,299 @@
+---
+const reviews = [
+  {
+    name: 'Елизавета Панкратова',
+    avatar: '/assets/review-elizaveta.webp',
+    date: '30 июня',
+    text: 'Отмечали с подругами получение диплома. Очень понравилось место: атмосфера, обслуживание, вкусная еда, все было отлично. Особенно нам поднял настроение официант Павел. Желаем ему продвижения по карьерной лестнице и просто удачи по жизни 💐',
+    href: 'https://yandex.by/maps/org/112602723149/reviews?reviews%5BpublicId%5D=3xnqvfypjy52y7wcy26ahpq5rr&si=mb08chedm1x3859kpduha4dr90&utm_source=review',
+  },
+  {
+    name: 'Андрей Жуков',
+    avatar: '/assets/review-andrey.webp',
+    date: '6 октября 2025',
+    text: 'Хочется поделиться не просто отзывом, а настоящей благодарностью за прекрасно проведенный вечер! Каждое блюдо было свежим, ароматным и приготовленным с душой, персонал — золотой фонд заведения. Очень внимательные, вежливые и по-настоящему приятные люди. Кальян выше всех похвал! Плотный, вкусный, очень хорошо собран.',
+    href: 'https://yandex.by/maps/org/112602723149/reviews?reviews%5BpublicId%5D=vvehckuq9cwb4ed0hk7nwy1vn4&si=mb08chedm1x3859kpduha4dr90&utm_source=review',
+  },
+  {
+    name: 'Tori',
+    avatar: '/assets/review-tori.webp',
+    date: '30 ноября 2025',
+    text: 'Кухня старается: салат с рукколой и греческий просто супер! Пицца отличная! Официанты молодцы! Цена — качество на высшем уровне 👍 Кроме того, максимальный комфорт пребывания с маленькими детьми! Рекомендую!',
+    href: 'https://yandex.by/maps/org/112602723149/reviews?reviews%5BpublicId%5D=mdmx8wbnhf8581zw9n78g1e9c8&si=mb08chedm1x3859kpduha4dr90&utm_source=review',
+  },
+];
+---
+
+<section
+  id="reviews"
+  class="reviews-section relative overflow-hidden bg-navy-deep border-y border-white/5"
+  data-reviews
+>
+  <div class="reviews-bg" aria-hidden="true"></div>
+  <div class="absolute inset-0 bg-navy-deep/40" aria-hidden="true"></div>
+
+  <div class="relative z-10 mx-auto max-w-7xl px-5 py-28 md:px-10 md:py-36 lg:px-16">
+    <div class="mx-auto max-w-2xl text-center">
+      <div class="section-heading section-heading-center">
+        <h2
+          class="section-heading-gold font-display text-5xl font-semibold leading-tight md:text-6xl lg:text-7xl"
+        >
+          Опыт клиента
+        </h2>
+        <span class="section-heading-rule" aria-hidden="true"></span>
+      </div>
+    </div>
+
+    <div class="mx-auto mt-12 max-w-3xl overflow-hidden">
+      <div class="review-track flex">
+        {
+          reviews.map((review) => (
+            <article class="w-full shrink-0">
+              <div class="rounded-2xl border border-white/15 bg-navy-deep/70 p-6 shadow-2xl shadow-black/30 backdrop-blur-sm sm:p-9">
+                <div class="flex items-center gap-4">
+                  <img
+                    src={review.avatar}
+                    alt={`Фото ${review.name}`}
+                    class="size-12 shrink-0 rounded-full border border-gold/50 object-cover"
+                    width="48"
+                    height="48"
+                    loading="lazy"
+                  />
+                  <div class="min-w-0">
+                    <p class="truncate font-medium text-champagne">{review.name}</p>
+                    <p class="mt-0.5 text-sm text-silver">{review.date} · Яндекс Карты</p>
+                  </div>
+                </div>
+
+                <div class="mt-6 flex gap-1 text-gold" aria-label="Оценка: 5 из 5">
+                  {
+                    Array.from({ length: 5 }).map(() => (
+                      <svg class="size-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="m12 2.7 2.85 5.78 6.38.93-4.62 4.5 1.09 6.36L12 17.28l-5.7 3 1.09-6.36-4.62-4.5 6.38-.93L12 2.7Z" />
+                      </svg>
+                    ))
+                  }
+                </div>
+
+                <span class="mt-5 block font-display text-6xl leading-none text-gold/80" aria-hidden="true">“</span>
+                <p class="-mt-5 text-base font-light leading-relaxed text-silver sm:text-lg">
+                  {review.text}
+                </p>
+
+                <a
+                  href={review.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="book-btn mt-6 !px-5 !py-3 text-xs"
+                >
+                  Отзывы <span aria-hidden="true">↗</span>
+                </a>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+
+    <div class="mt-7 flex items-center justify-center gap-4">
+      <button
+        class="review-control"
+        type="button"
+        aria-label="Предыдущий отзыв"
+        data-review-prev
+      >
+        <span aria-hidden="true">←</span>
+      </button>
+      <div class="flex gap-2" aria-label="Навигация по отзывам">
+        {
+          reviews.map((_, index) => (
+            <button
+              class:list={['review-dot', { 'is-active': index === 0 }]}
+              type="button"
+              aria-label={`Показать отзыв ${index + 1}`}
+              aria-current={index === 0 ? 'true' : undefined}
+              data-review-dot={index}
+            ></button>
+          ))
+        }
+      </div>
+      <button class="review-control" type="button" aria-label="Следующий отзыв" data-review-next>
+        <span aria-hidden="true">→</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .reviews-section {
+    clip-path: inset(0);
+  }
+
+  .reviews-bg {
+    position: fixed;
+    inset: -1.5rem;
+    z-index: 0;
+    background-image: url('/assets/reviews-bg.webp');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    pointer-events: none;
+    filter: blur(6px);
+    transform: translateZ(0);
+  }
+
+  .review-track {
+    gap: 1rem;
+    transition: transform 0.55s cubic-bezier(0.25, 0.1, 0.25, 1);
+    touch-action: pan-y;
+  }
+
+  .review-track > article {
+    flex: 0 0 calc(100% - 1rem);
+  }
+
+  .review-track.is-dragging {
+    transition: none;
+  }
+
+  .review-control {
+    display: grid;
+    width: 2.5rem;
+    height: 2.5rem;
+    place-items: center;
+    border: 1px solid rgb(255 255 255 / 0.18);
+    border-radius: 9999px;
+    color: var(--color-champagne, #f6e5a9);
+    transition: border-color 0.2s, background-color 0.2s, color 0.2s;
+  }
+
+  .review-control:hover:not(:disabled) {
+    border-color: var(--color-gold, #c99b2f);
+    background: var(--color-gold, #c99b2f);
+    color: var(--color-navy-deep, #111827);
+  }
+
+  .review-control:disabled {
+    cursor: not-allowed;
+    opacity: 0.35;
+  }
+
+  .review-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 9999px;
+    background: rgb(255 255 255 / 0.25);
+    transition: width 0.2s, background-color 0.2s;
+  }
+
+  .review-dot.is-active {
+    width: 1.5rem;
+    background: var(--color-gold, #c99b2f);
+  }
+</style>
+
+<script>
+  const reviewsSection = document.querySelector<HTMLElement>('[data-reviews]');
+
+  if (reviewsSection) {
+    const track = reviewsSection.querySelector<HTMLElement>('.review-track');
+    const dots = [...reviewsSection.querySelectorAll<HTMLButtonElement>('[data-review-dot]')];
+    const previous = reviewsSection.querySelector<HTMLButtonElement>('[data-review-prev]');
+    const next = reviewsSection.querySelector<HTMLButtonElement>('[data-review-next]');
+    const slides = track ? [...track.children] : [];
+    const slideCount = slides.length;
+    let current = 0;
+    let startX = 0;
+    let startOffset = 0;
+    let dragging = false;
+
+    const slideStep = () => {
+      if (!track) return 0;
+      const slide = track.children[0] as HTMLElement | undefined;
+      return slide ? slide.getBoundingClientRect().width + 16 : 0;
+    };
+
+    const render = (animate = true) => {
+      if (!track) return;
+      track.classList.toggle('is-dragging', !animate);
+      track.style.transform = `translateX(-${current * slideStep()}px)`;
+    };
+
+    const updateNavigation = () => {
+      dots.forEach((dot, dotIndex) => {
+        const active = dotIndex === current;
+        dot.classList.toggle('is-active', active);
+        dot.setAttribute('aria-current', active ? 'true' : 'false');
+      });
+
+      previous && (previous.disabled = current === 0);
+      next && (next.disabled = current === slideCount - 1);
+    };
+
+    const showReview = (index: number) => {
+      const nextIndex = Math.min(Math.max(index, 0), slideCount - 1);
+      if (nextIndex === current) {
+        render();
+        return;
+      }
+
+      current = nextIndex;
+      render();
+      updateNavigation();
+    };
+
+    render(false);
+    updateNavigation();
+
+    previous?.addEventListener('click', () => showReview(current - 1));
+    next?.addEventListener('click', () => showReview(current + 1));
+    dots.forEach((dot, index) => dot.addEventListener('click', () => showReview(index)));
+
+    track?.addEventListener('pointerdown', (event) => {
+      if ((event.target as HTMLElement | null)?.closest('a, button')) return;
+
+      startX = event.clientX;
+      startOffset = -current * slideStep();
+      dragging = true;
+      track.classList.add('is-dragging');
+      track.setPointerCapture(event.pointerId);
+    });
+
+    track?.addEventListener('pointermove', (event) => {
+      if (!dragging) return;
+
+      const distance = event.clientX - startX;
+      const offset = startOffset + distance;
+      track.style.transform = `translateX(${offset}px)`;
+    });
+
+    track?.addEventListener('pointerup', (event) => {
+      if (!dragging) return;
+      const distance = event.clientX - startX;
+      dragging = false;
+      track.classList.remove('is-dragging');
+      if (track.hasPointerCapture(event.pointerId)) {
+        track.releasePointerCapture(event.pointerId);
+      }
+
+      if (Math.abs(distance) < 55) {
+        render();
+        return;
+      }
+
+      showReview(current + (distance < 0 ? 1 : -1));
+    });
+
+    track?.addEventListener('pointercancel', (event) => {
+      if (!dragging) return;
+      dragging = false;
+      track.classList.remove('is-dragging');
+      if (track.hasPointerCapture(event.pointerId)) {
+        track.releasePointerCapture(event.pointerId);
+      }
+      render();
+    });
+
+    window.addEventListener('resize', () => render(false));
+  }
+</script>
