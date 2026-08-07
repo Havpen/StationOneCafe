@@ -25,20 +25,21 @@ npm run build
 npm run preview   # проверка локально
 ```
 
-С `base: '/StationOneCafe'` локально открывай `http://localhost:4321/StationOneCafe/`.
+С `base: '/StationOneCafe'` локально открывай `http://localhost:4321/StationOneCafe/` (`trailingSlash: 'always'`).
 
 Node **≥ 20**.
 
 ## 3. GitHub Pages (основной хостинг)
 
-Деплой через Actions: [`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml).
+Деплой через Actions: [`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml) → ветка **`gh-pages`**.
 
 ### Однократная настройка
 
-1. Репозиторий → **Settings → Pages**
-2. **Build and deployment → Source:** GitHub Actions
-3. Push в `main` (или **Actions → Deploy GitHub Pages → Run workflow**)
-4. Открыть https://havpen.github.io/StationOneCafe/
+1. Дождись зелёного workflow **Deploy GitHub Pages** в **Actions** (создаст ветку `gh-pages`)
+2. Репозиторий → **Settings → Pages**
+3. **Build and deployment → Source:** Deploy from a branch
+4. **Branch:** `gh-pages` / `/ (root)` → Save
+5. Через 1–2 минуты открой https://havpen.github.io/StationOneCafe/
 
 Конфиги Netlify / Vercel остаются опциональными запасными вариантами.
 

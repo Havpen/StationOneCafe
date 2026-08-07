@@ -8,7 +8,7 @@ const SITE = 'https://havpen.github.io';
 export default defineConfig({
   site: SITE,
   base: '/StationOneCafe',
-  trailingSlash: 'never',
+  trailingSlash: 'always',
   compressHTML: true,
   integrations: [
     sitemap({
