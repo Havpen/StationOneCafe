@@ -1,7 +1,10 @@
 ---
+import { withBase } from '../data/site';
+
 const phone = '+375333335233';
 const phoneDisplay = '+375 33 333-52-33';
 const year = new Date().getFullYear();
+const logo = withBase('/logo.webp');
 
 const links = [
   { href: '#kitchen', label: 'Кухня' },
@@ -21,7 +24,7 @@ const links = [
     <div class="order-1 hidden md:order-1 md:block">
       <a href="#top" class="inline-block">
         <img
-          src="/logo.webp"
+          src={logo}
           alt="Station One Cafe"
           class="h-20 w-auto"
           width="128"
@@ -80,7 +83,7 @@ const links = [
       <div class="shrink-0 text-right md:hidden">
         <a href="#top" class="inline-block">
           <img
-            src="/logo.webp"
+            src={logo}
             alt="Station One Cafe"
             class="h-16 w-auto"
             width="128"

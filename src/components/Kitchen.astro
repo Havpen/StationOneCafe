@@ -1,17 +1,19 @@
 ---
+import { withBase } from '../data/site';
+
 const dishes = [
   {
-    src: '/assets/kitchen-breakfast.webp',
+    src: withBase('/assets/kitchen-breakfast.webp'),
     alt: 'Завтрак в Station One Cafe, Гомель',
     label: 'Завтрак',
   },
   {
-    src: '/assets/kitchen-lunch.webp',
+    src: withBase('/assets/kitchen-lunch.webp'),
     alt: 'Обед в Station One Cafe, Гомель',
     label: 'Обед',
   },
   {
-    src: '/assets/kitchen-dinner.webp',
+    src: withBase('/assets/kitchen-dinner.webp'),
     alt: 'Ужин в Station One Cafe, Гомель',
     label: 'Ужин',
   },
@@ -35,7 +37,7 @@ const dishes = [
         обеда до вечернего десерта. Откройте полное меню или закажите доставку.
       </p>
       <a
-        href="/menu-station-one.pdf"
+        href={withBase('/menu-station-one.pdf')}
         target="_blank"
         rel="noopener noreferrer"
         class="book-btn mt-8"

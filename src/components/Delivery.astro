@@ -1,14 +1,16 @@
 ---
+import { withBase } from '../data/site';
+
 const services = [
   {
     name: 'Яндекс Еда',
     href: 'https://eda.yandex.by/r/station_one',
-    icon: '/icons/yandex-eda.webp',
+    icon: withBase('/icons/yandex-eda.webp'),
   },
   {
     name: 'Just Eat',
     href: 'https://just-eat.by/station-one-gomel',
-    icon: '/icons/just-eat.webp',
+    icon: withBase('/icons/just-eat.webp'),
   },
 ];
 

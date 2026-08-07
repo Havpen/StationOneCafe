@@ -1,6 +1,6 @@
 ---
 import '../styles/global.css';
-import { SITE_URL, site, pageTitle, faqs } from '../data/site';
+import { SITE_URL, site, pageTitle, faqs, withBase } from '../data/site';
 
 interface Props {
   title?: string;
@@ -174,12 +174,18 @@ const webpageLd = {
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
 
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" type="image/png" href="/logo-mini.webp" />
-    <link rel="apple-touch-icon" href="/logo-mini.webp" />
-    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
+    <link rel="icon" type="image/png" href={withBase('/logo-mini.webp')} />
+    <link rel="apple-touch-icon" href={withBase('/logo-mini.webp')} />
+    <link rel="manifest" href={withBase('/site.webmanifest')} />
     {!noindex && (
-      <link rel="preload" href="/assets/hero.webp" as="image" type="image/webp" fetchpriority="high" />
+      <link
+        rel="preload"
+        href={withBase('/assets/hero.webp')}
+        as="image"
+        type="image/webp"
+        fetchpriority="high"
+      />
     )}
 
     <script type="application/ld+json" set:html={JSON.stringify(localBusinessLd)} />

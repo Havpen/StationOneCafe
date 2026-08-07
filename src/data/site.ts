@@ -1,8 +1,19 @@
-/** Production domain from astro.config `site` (change there before deploy) */
-export const SITE_URL = (import.meta.env.SITE || 'https://stationonegomel.by').replace(
-  /\/$/,
-  '',
-);
+/** Prefix a public path with Astro `base` (e.g. `/StationOneCafe/`). */
+export function withBase(path = ''): string {
+  let base = import.meta.env.BASE_URL || '/';
+  if (!base.endsWith('/')) base += '/';
+  const normalized = String(path).replace(/^\//, '');
+  return normalized ? `${base}${normalized}` : base;
+}
+
+/** Production origin from astro.config `site` (no trailing slash) */
+const SITE_ORIGIN = (import.meta.env.SITE || 'https://havpen.github.io').replace(/\/$/, '');
+
+/**
+ * Full site URL including base path, e.g. https://havpen.github.io/StationOneCafe
+ * Used for canonical, Open Graph, JSON-LD, robots sitemap.
+ */
+export const SITE_URL = `${SITE_ORIGIN}${withBase()}`.replace(/\/$/, '') || SITE_ORIGIN;
 
 export const site = {
   name: 'Station One Cafe',
@@ -41,10 +52,10 @@ export const site = {
     count: 509,
     best: 5,
   },
-  logo: '/logo.webp',
-  ogImage: '/assets/hero.webp',
+  logo: withBase('/logo.webp'),
+  ogImage: withBase('/assets/hero.webp'),
   themeColor: '#212226',
-} as const;
+};
 
 /** Title ~60 символов */
 export const pageTitle = 'Station One Cafe — кафе и кальяны в Гомеле';

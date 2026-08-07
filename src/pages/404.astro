@@ -1,6 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { SITE_URL, site } from '../data/site';
+import { SITE_URL, site, withBase } from '../data/site';
+
+const home = withBase('/');
 ---
 
 <Layout
@@ -20,16 +22,16 @@ import { SITE_URL, site } from '../data/site';
       Такой страницы нет. Перейдите на главную Station One Cafe или позвоните для брони.
     </p>
     <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
-      <a href="/" class="book-btn">На главную</a>
+      <a href={home} class="book-btn">На главную</a>
       <a href={`tel:${site.phone}`} class="text-sm text-gold transition hover:text-champagne">
         {site.phoneDisplay}
       </a>
     </div>
     <nav class="mt-12 flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm text-silver" aria-label="Разделы сайта">
-      <a href="/#kitchen" class="hover:text-champagne">Кухня</a>
-      <a href="/#delivery" class="hover:text-champagne">Доставка</a>
-      <a href="/#map" class="hover:text-champagne">Как нас найти</a>
-      <a href="/#contacts" class="hover:text-champagne">Бронь</a>
+      <a href={`${home}#kitchen`} class="hover:text-champagne">Кухня</a>
+      <a href={`${home}#delivery`} class="hover:text-champagne">Доставка</a>
+      <a href={`${home}#map`} class="hover:text-champagne">Как нас найти</a>
+      <a href={`${home}#contacts`} class="hover:text-champagne">Бронь</a>
     </nav>
     <p class="mt-8 text-xs text-silver/50">{SITE_URL}</p>
   </main>

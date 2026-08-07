@@ -1,8 +1,7 @@
 import type { APIRoute } from 'astro';
+import { SITE_URL } from '../data/site';
 
 export const prerender = true;
-
-const site = (import.meta.env.SITE || 'https://stationonegomel.by').replace(/\/$/, '');
 
 export const GET: APIRoute = () => {
   const body = `User-agent: *
@@ -11,7 +10,7 @@ Allow: /
 Disallow: /404
 Disallow: /404.html
 
-Sitemap: ${site}/sitemap-index.xml
+Sitemap: ${SITE_URL}/sitemap-index.xml
 `;
 
   return new Response(body, {

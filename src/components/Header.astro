@@ -1,4 +1,6 @@
 ---
+import { withBase } from '../data/site';
+
 const phone = '+375333335233';
 
 const links = [
@@ -17,7 +19,7 @@ const links = [
     <div class="site-header-inner">
       <a href="#top" class="site-header-logo">
         <img
-          src="/logo-mini.webp"
+          src={withBase('/logo-mini.webp')}
           alt="Station One Cafe"
           width="48"
           height="80"

@@ -2,11 +2,12 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
-/** Production domain — change before deploy if different */
-const SITE = 'https://stationonecafe.netlify.app';
+/** Production domain — GitHub Pages project site */
+const SITE = 'https://havpen.github.io';
 
 export default defineConfig({
   site: SITE,
+  base: '/StationOneCafe',
   trailingSlash: 'never',
   compressHTML: true,
   integrations: [

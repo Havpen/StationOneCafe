@@ -1,27 +1,31 @@
 ---
+import { withBase } from '../data/site';
+
 const reviews = [
   {
     name: 'Елизавета Панкратова',
-    avatar: '/assets/review-elizaveta.webp',
+    avatar: withBase('/assets/review-elizaveta.webp'),
     date: '30 июня',
     text: 'Отмечали с подругами получение диплома. Очень понравилось место: атмосфера, обслуживание, вкусная еда, все было отлично. Особенно нам поднял настроение официант Павел. Желаем ему продвижения по карьерной лестнице и просто удачи по жизни 💐',
     href: 'https://yandex.by/maps/org/112602723149/reviews?reviews%5BpublicId%5D=3xnqvfypjy52y7wcy26ahpq5rr&si=mb08chedm1x3859kpduha4dr90&utm_source=review',
   },
   {
     name: 'Андрей Жуков',
-    avatar: '/assets/review-andrey.webp',
+    avatar: withBase('/assets/review-andrey.webp'),
     date: '6 октября 2025',
     text: 'Хочется поделиться не просто отзывом, а настоящей благодарностью за прекрасно проведенный вечер! Каждое блюдо было свежим, ароматным и приготовленным с душой, персонал — золотой фонд заведения. Очень внимательные, вежливые и по-настоящему приятные люди. Кальян выше всех похвал! Плотный, вкусный, очень хорошо собран.',
     href: 'https://yandex.by/maps/org/112602723149/reviews?reviews%5BpublicId%5D=vvehckuq9cwb4ed0hk7nwy1vn4&si=mb08chedm1x3859kpduha4dr90&utm_source=review',
   },
   {
     name: 'Tori',
-    avatar: '/assets/review-tori.webp',
+    avatar: withBase('/assets/review-tori.webp'),
     date: '30 ноября 2025',
     text: 'Кухня старается: салат с рукколой и греческий просто супер! Пицца отличная! Официанты молодцы! Цена — качество на высшем уровне 👍 Кроме того, максимальный комфорт пребывания с маленькими детьми! Рекомендую!',
     href: 'https://yandex.by/maps/org/112602723149/reviews?reviews%5BpublicId%5D=mdmx8wbnhf8581zw9n78g1e9c8&si=mb08chedm1x3859kpduha4dr90&utm_source=review',
   },
 ];
+
+const reviewsBg = withBase('/assets/reviews-bg.webp');
 ---
 
 <section
@@ -29,7 +33,7 @@ const reviews = [
   class="reviews-section relative overflow-hidden bg-navy-deep border-y border-white/5"
   data-reviews
 >
-  <div class="reviews-bg" aria-hidden="true"></div>
+  <div class="reviews-bg" style={`background-image: url('${reviewsBg}')`} aria-hidden="true"></div>
   <div class="absolute inset-0 bg-navy-deep/40" aria-hidden="true"></div>
 
   <div class="relative z-10 mx-auto max-w-7xl px-5 py-28 md:px-10 md:py-36 lg:px-16">
@@ -134,7 +138,6 @@ const reviews = [
     position: fixed;
     inset: -1.5rem;
     z-index: 0;
-    background-image: url('/assets/reviews-bg.webp');
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
