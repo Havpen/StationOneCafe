@@ -3,32 +3,23 @@ import { withBase } from '../data/site';
 
 const menuPdf = withBase('/menu-station-one.pdf');
 
-const backgrounds = [
-  withBase('/assets/kitchen-breakfast.webp'),
-  withBase('/assets/kitchen-lunch.webp'),
-  withBase('/assets/kitchen-dinner.webp'),
-  withBase('/assets/gallery-01.webp'),
-  withBase('/assets/gallery-04.webp'),
-  withBase('/assets/gallery-06.webp'),
-];
-
 const categories = [
-  { title: 'Закуски', page: 2 },
-  { title: 'Рекомендуем', page: 3 },
-  { title: 'Салаты', page: 3 },
-  { title: 'Супы', page: 4 },
-  { title: 'Сэндвичи', page: 4 },
-  { title: 'На углях', page: 5 },
-  { title: 'На компанию', page: 6 },
-  { title: 'Пицца', page: 7 },
-  { title: 'Паста', page: 8 },
-  { title: 'Детское Меню', page: 8 },
-  { title: 'Десерты', page: 9 },
-  { title: 'Бизнес ланч', page: 11, time: '12:00 – 16:00' },
-].map((item, index) => ({
+  { title: 'Закуски', page: 2, image: 'kitchen-zakuski.webp' },
+  { title: 'Рекомендуем', page: 3, image: 'kitchen-recommend.webp' },
+  { title: 'Салаты', page: 3, image: 'kitchen-salaty.webp' },
+  { title: 'Супы', page: 4, image: 'kitchen-lunch.webp' },
+  { title: 'Сэндвичи', page: 4, image: 'kitchen-breakfast.webp' },
+  { title: 'На углях', page: 5, image: 'kitchen-uglyakh.webp' },
+  { title: 'На компанию', page: 6, image: 'kitchen-kompaniya.webp' },
+  { title: 'Пицца', page: 7, image: 'kitchen-pizza.webp' },
+  { title: 'Паста', page: 8, image: 'kitchen-pasta.webp' },
+  { title: 'Детское Меню', page: 8, image: 'kitchen-dinner.webp' },
+  { title: 'Десерты', page: 9, image: 'kitchen-desserty.webp' },
+  { title: 'Бизнес ланч', page: 11, image: 'kitchen-uglyakh.webp', time: '12:00 – 16:00' },
+].map((item) => ({
   ...item,
   href: `${menuPdf}#page=${item.page}`,
-  src: backgrounds[index % backgrounds.length],
+  src: withBase(`/assets/${item.image}`),
 }));
 ---
 
