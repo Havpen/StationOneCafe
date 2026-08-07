@@ -1,23 +1,35 @@
 ---
 import { withBase } from '../data/site';
 
-const dishes = [
-  {
-    src: withBase('/assets/kitchen-breakfast.webp'),
-    alt: 'Завтрак в Station One Cafe, Гомель',
-    label: 'Завтрак',
-  },
-  {
-    src: withBase('/assets/kitchen-lunch.webp'),
-    alt: 'Обед в Station One Cafe, Гомель',
-    label: 'Обед',
-  },
-  {
-    src: withBase('/assets/kitchen-dinner.webp'),
-    alt: 'Ужин в Station One Cafe, Гомель',
-    label: 'Ужин',
-  },
+const menuPdf = withBase('/menu-station-one.pdf');
+
+const backgrounds = [
+  withBase('/assets/kitchen-breakfast.webp'),
+  withBase('/assets/kitchen-lunch.webp'),
+  withBase('/assets/kitchen-dinner.webp'),
+  withBase('/assets/gallery-01.webp'),
+  withBase('/assets/gallery-04.webp'),
+  withBase('/assets/gallery-06.webp'),
 ];
+
+const categories = [
+  { title: 'Закуски', page: 2 },
+  { title: 'Рекомендуем', page: 3 },
+  { title: 'Салаты', page: 3 },
+  { title: 'Супы', page: 4 },
+  { title: 'Сэндвичи', page: 4 },
+  { title: 'На углях', page: 5 },
+  { title: 'На компанию', page: 6 },
+  { title: 'Пицца', page: 7 },
+  { title: 'Паста', page: 8 },
+  { title: 'Детское Меню', page: 8 },
+  { title: 'Десерты', page: 9 },
+  { title: 'Бизнес ланч', page: 11, time: '12:00 – 16:00' },
+].map((item, index) => ({
+  ...item,
+  href: `${menuPdf}#page=${item.page}`,
+  src: backgrounds[index % backgrounds.length],
+}));
 ---
 
 <section id="kitchen" class="section-pad bg-navy-deep" data-kitchen>
@@ -36,7 +48,7 @@ const dishes = [
         обеда до вечернего десерта. Откройте полное меню или закажите доставку.
       </p>
       <a
-        href={withBase('/menu-station-one.pdf')}
+        href={menuPdf}
         target="_blank"
         rel="noopener noreferrer"
         class="book-btn mt-8"
@@ -45,29 +57,40 @@ const dishes = [
       </a>
     </div>
 
-    <div class="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+    <div class="mt-12 grid grid-cols-2 gap-2.5 sm:gap-3 md:grid-cols-6 md:gap-3">
       {
-        dishes.map((dish, index) => (
-          <figure
-            class="kitchen-card group relative overflow-hidden"
-            style={`--dish-delay: ${index * 0.2}s`}
+        categories.map((item, index) => (
+          <a
+            href={item.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="kitchen-card group relative aspect-square overflow-hidden"
+            style={`--dish-delay: ${(index % 6) * 0.06}s`}
+            aria-label={`${item.title} — открыть в меню PDF`}
           >
             <img
-              src={dish.src}
-              alt={dish.alt}
-              class="aspect-[3/4] w-full object-cover transition duration-700 group-hover:scale-[1.04]"
+              src={item.src}
+              alt=""
+              class="absolute inset-0 size-full object-cover transition duration-700 group-hover:scale-[1.05]"
               loading="lazy"
-            />
-            <div
-              class="pointer-events-none absolute inset-0 bg-gradient-to-b from-navy-deep/50 via-navy-deep/30 to-navy-deep/65"
+              decoding="async"
               aria-hidden="true"
             />
-            <figcaption class="kitchen-caption absolute inset-0 z-10 flex items-center justify-center px-4 text-center">
-              <span class="font-display text-2xl font-semibold tracking-wide text-champagne md:text-3xl">
-                {dish.label}
+            <div
+              class="pointer-events-none absolute inset-0 bg-gradient-to-b from-navy-deep/55 via-navy-deep/45 to-navy-deep/70 transition duration-500 group-hover:from-navy-deep/45 group-hover:via-navy-deep/35 group-hover:to-navy-deep/60"
+              aria-hidden="true"
+            />
+            <span class="kitchen-caption absolute inset-0 z-10 flex flex-col items-center justify-center gap-1 px-2 text-center sm:px-3">
+              <span class="font-display text-[clamp(0.95rem,2.8vw,1.35rem)] font-semibold leading-tight tracking-wide text-champagne">
+                {item.title}
               </span>
-            </figcaption>
-          </figure>
+              {item.time ? (
+                <span class="font-accent text-[0.65rem] font-medium tracking-wide text-gold sm:text-xs">
+                  {item.time}
+                </span>
+              ) : null}
+            </span>
+          </a>
         ))
       }
     </div>
@@ -81,9 +104,14 @@ const dishes = [
       0 4px 18px rgb(0 0 0 / 0.55);
   }
 
-  /* Visible without JS (Netlify CSP / no-JS). Motion still enhances when .is-visible. */
   .kitchen-card {
     opacity: 1;
+    border: 1px solid rgb(212 175 55 / 0.18);
+    background: rgb(22 23 26 / 0.85);
+  }
+
+  .kitchen-card:hover {
+    border-color: rgb(212 175 55 / 0.45);
   }
 
   @media (min-width: 768px) {
@@ -93,7 +121,7 @@ const dishes = [
     }
 
     [data-kitchen].is-visible .kitchen-card {
-      animation: kitchen-card-reveal 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation: kitchen-card-reveal 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
       animation-delay: var(--dish-delay, 0s);
     }
   }
@@ -106,8 +134,9 @@ const dishes = [
 
     .kitchen-card {
       transition:
-        opacity 0.7s ease,
-        transform 0.7s ease;
+        opacity 0.65s ease,
+        transform 0.65s ease,
+        border-color 0.3s ease;
     }
 
     .kitchen-card.is-visible {
@@ -170,7 +199,7 @@ const dishes = [
           ([entry]) => {
             section.classList.toggle('is-visible', entry.isIntersecting);
           },
-          { threshold: 0.18, rootMargin: '0px 0px -6% 0px' },
+          { threshold: 0.12, rootMargin: '0px 0px -6% 0px' },
         );
         observer.observe(section);
         return;
@@ -182,7 +211,7 @@ const dishes = [
             entry.target.classList.toggle('is-visible', entry.isIntersecting);
           });
         },
-        { threshold: 1 / 3 },
+        { threshold: 0.25 },
       );
       cards.forEach((card) => observer?.observe(card));
     };
