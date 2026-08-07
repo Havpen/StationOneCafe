@@ -4,18 +4,18 @@
 
 ## 1. Домен
 
-В `astro.config.mjs` заданы:
+В `astro.config.mjs`:
 
-```js
-const SITE = 'https://havpen.github.io';
-// base: '/StationOneCafe'
-```
+- **Netlify / локально:** `site = https://stationonecafe.netlify.app`, `base = /`
+- **GitHub Actions:** `site = https://havpen.github.io`, `base = /StationOneCafe`
 
 От них зависят canonical, Open Graph, JSON-LD, `robots.txt` и sitemap.
 
-Текущий URL GitHub Pages: **https://havpen.github.io/StationOneCafe/**
+URL:
+- Netlify: https://stationonecafe.netlify.app/
+- GitHub Pages: https://havpen.github.io/StationOneCafe/
 
-При смене домена обнови `site` / `base` в `astro.config.mjs` и пути в `public/site.webmanifest`.
+При своём домене обнови `site` в `astro.config.mjs`.
 
 ## 2. Сборка
 
@@ -25,7 +25,7 @@ npm run build
 npm run preview   # проверка локально
 ```
 
-С `base: '/StationOneCafe'` локально открывай `http://localhost:4321/StationOneCafe/` (`trailingSlash: 'always'`).
+С `base: '/'` локально открывай `http://localhost:4321/` (`trailingSlash: 'always'`).
 
 Node **≥ 20**.
 
