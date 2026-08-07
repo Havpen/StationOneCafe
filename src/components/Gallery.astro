@@ -23,8 +23,6 @@ const strip = [...photos, ...photos];
 ---
 
 <section id="gallery" class="relative overflow-hidden bg-navy py-10 md:py-14" data-gallery>
-  <div class="pointer-events-none absolute -left-24 top-0 h-72 w-72 rounded-full bg-gold/5 blur-3xl"></div>
-
   <div class="relative mx-auto mb-6 max-w-7xl px-5 md:mb-8 md:px-10 lg:px-16">
     <div class="section-heading section-heading-center">
       <h2
@@ -36,8 +34,8 @@ const strip = [...photos, ...photos];
     </div>
   </div>
 
-  <div class="gallery-marquee" aria-label="Фотографии кафе">
-    <div class="gallery-track">
+  <div class="gallery-marquee" data-gallery-marquee aria-label="Фотографии кафе">
+    <div class="gallery-track" data-gallery-track>
       {
         strip.map((src, index) => (
           <figure class="gallery-item">
@@ -48,6 +46,7 @@ const strip = [...photos, ...photos];
               height="853"
               loading="lazy"
               decoding="async"
+              draggable="false"
               aria-hidden={index >= photos.length ? 'true' : undefined}
             />
           </figure>
@@ -59,8 +58,13 @@ const strip = [...photos, ...photos];
 
 <style>
   .gallery-marquee {
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
     width: 100%;
+    cursor: grab;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
     mask-image: linear-gradient(
       90deg,
       transparent 0%,
@@ -70,13 +74,22 @@ const strip = [...photos, ...photos];
     );
   }
 
+  .gallery-marquee::-webkit-scrollbar {
+    display: none;
+  }
+
+  .gallery-marquee.is-dragging {
+    cursor: grabbing;
+    scroll-behavior: auto;
+  }
+
   .gallery-track {
     display: flex;
     width: max-content;
     gap: 0.85rem;
     padding-block: 0.25rem;
-    animation: gallery-drift 160s linear infinite;
-    will-change: transform;
+    padding-inline: 1.25rem;
+    user-select: none;
   }
 
   .gallery-item {
@@ -85,6 +98,7 @@ const strip = [...photos, ...photos];
     width: min(42vw, 16.5rem);
     overflow: hidden;
     background: rgb(22 23 26 / 0.45);
+    pointer-events: none;
   }
 
   @media (min-width: 768px) {
@@ -94,6 +108,7 @@ const strip = [...photos, ...photos];
 
     .gallery-track {
       gap: 1rem;
+      padding-inline: 2.5rem;
     }
   }
 
@@ -110,27 +125,71 @@ const strip = [...photos, ...photos];
     height: auto;
     object-fit: cover;
   }
-
-  @keyframes gallery-drift {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      transform: translateX(-50%);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .gallery-track {
-      animation: none;
-      overflow-x: auto;
-      max-width: 100%;
-      padding-inline: 1.25rem;
-      scrollbar-width: thin;
-    }
-
-    .gallery-marquee {
-      mask-image: none;
-    }
-  }
 </style>
+
+<script>
+  const marquee = document.querySelector<HTMLElement>('[data-gallery-marquee]');
+  if (marquee) {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let paused = false;
+    let dragging = false;
+    let startX = 0;
+    let startScroll = 0;
+    let frame = 0;
+    const speed = 0.45;
+
+    const tick = () => {
+      if (!paused && !dragging && !reduceMotion) {
+        marquee.scrollLeft += speed;
+        const half = marquee.scrollWidth / 2;
+        if (half > 0 && marquee.scrollLeft >= half) {
+          marquee.scrollLeft -= half;
+        }
+      }
+      frame = requestAnimationFrame(tick);
+    };
+
+    if (!reduceMotion) {
+      frame = requestAnimationFrame(tick);
+    }
+
+    marquee.addEventListener('mouseenter', () => {
+      paused = true;
+    });
+    marquee.addEventListener('mouseleave', () => {
+      if (!dragging) paused = false;
+    });
+
+    marquee.addEventListener('pointerdown', (event) => {
+      if (event.pointerType === 'mouse' && event.button !== 0) return;
+      dragging = true;
+      paused = true;
+      startX = event.clientX;
+      startScroll = marquee.scrollLeft;
+      marquee.classList.add('is-dragging');
+      marquee.setPointerCapture(event.pointerId);
+    });
+
+    marquee.addEventListener('pointermove', (event) => {
+      if (!dragging) return;
+      const dx = event.clientX - startX;
+      marquee.scrollLeft = startScroll - dx;
+    });
+
+    const endDrag = (event: PointerEvent) => {
+      if (!dragging) return;
+      dragging = false;
+      marquee.classList.remove('is-dragging');
+      if (marquee.hasPointerCapture(event.pointerId)) {
+        marquee.releasePointerCapture(event.pointerId);
+      }
+      const over = marquee.matches(':hover');
+      paused = over;
+    };
+
+    marquee.addEventListener('pointerup', endDrag);
+    marquee.addEventListener('pointercancel', endDrag);
+
+    window.addEventListener('beforeunload', () => cancelAnimationFrame(frame));
+  }
+</script>

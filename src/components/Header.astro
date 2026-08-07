@@ -89,19 +89,20 @@ const links = [
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    max-width: 80rem;
-    margin-inline: auto;
-    padding: 0.625rem 1.25rem;
+    width: 100%;
+    max-width: none;
+    margin-inline: 0;
+    padding: 0.625rem 1rem;
     padding-top: max(0.625rem, env(safe-area-inset-top));
-    padding-right: max(1.25rem, env(safe-area-inset-right));
-    padding-left: max(1.25rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+    padding-left: max(1rem, env(safe-area-inset-left));
   }
 
   @media (min-width: 768px) {
     .site-header-inner {
-      padding-inline: 2.5rem;
-      padding-right: max(2.5rem, env(safe-area-inset-right));
-      padding-left: max(2.5rem, env(safe-area-inset-left));
+      padding-inline: 1.5rem;
+      padding-right: max(1.5rem, env(safe-area-inset-right));
+      padding-left: max(1.5rem, env(safe-area-inset-left));
     }
   }
 
