@@ -23,10 +23,12 @@ const strip = [...photos, ...photos];
 ---
 
 <section id="gallery" class="relative overflow-hidden bg-navy py-10 md:py-14" data-gallery>
+  <div class="pointer-events-none absolute -left-24 top-0 h-72 w-72 rounded-full bg-gold/5 blur-3xl"></div>
+
   <div class="relative mx-auto mb-6 max-w-7xl px-5 md:mb-8 md:px-10 lg:px-16">
     <div class="section-heading section-heading-center">
       <h2
-        class="section-heading-gold font-display text-4xl font-bold leading-tight md:text-5xl lg:text-6xl"
+        class="section-heading-gold font-display text-4xl font-semibold leading-tight md:text-5xl lg:text-6xl"
       >
         Галерея
       </h2>
@@ -73,7 +75,7 @@ const strip = [...photos, ...photos];
     width: max-content;
     gap: 0.85rem;
     padding-block: 0.25rem;
-    animation: gallery-drift 180s linear 1.2s infinite;
+    animation: gallery-drift 160s linear infinite;
     will-change: transform;
   }
 
@@ -82,7 +84,7 @@ const strip = [...photos, ...photos];
     flex: 0 0 auto;
     width: min(42vw, 16.5rem);
     overflow: hidden;
-    background: rgb(33 34 38 / 0.45);
+    background: rgb(22 23 26 / 0.45);
   }
 
   @media (min-width: 768px) {

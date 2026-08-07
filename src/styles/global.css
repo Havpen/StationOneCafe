@@ -35,11 +35,6 @@
     font-family: var(--font-sans);
   }
 
-  .text-accent {
-    color: var(--color-gold);
-    font-weight: 600;
-  }
-
   /* Menu scroll lock — keep header/menu fixed to the real viewport */
   html.is-menu-open,
   html.is-menu-open body {
@@ -119,19 +114,12 @@
 }
 
 @keyframes ken-burns {
-  0% {
-    transform: scale(1) translate3d(0, 0, 0);
+  from {
+    transform: scale(1);
   }
-  50% {
-    transform: scale(1.08) translate3d(-1.5%, -1%, 0);
+  to {
+    transform: scale(1.06);
   }
-  100% {
-    transform: scale(1.12) translate3d(1%, 0.5%, 0);
-  }
-}
-
-.animate-ken {
-  animation: ken-burns 28s ease-in-out infinite alternate;
 }
 
 .animate-fade-up {
@@ -142,10 +130,8 @@
   animation: fade-in 1.1s ease both;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .animate-ken {
-    animation: none;
-  }
+.animate-ken {
+  animation: ken-burns 18s ease-out forwards;
 }
 
 .delay-1 {
