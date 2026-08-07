@@ -1,7 +1,13 @@
 ---
-const yandexMapUrl = 'https://yandex.by/maps/-/CTCHBF1p';
+import { site } from '../data/site';
+
+const { latitude, longitude } = site.geo;
 const yandexWidgetUrl =
-  'https://yandex.by/map-widget/v1/?ll=31.0095%2C52.4347&mode=search&oid=112602723149&ol=biz&z=16';
+  `https://yandex.by/map-widget/v1/?ll=${longitude}%2C${latitude}&mode=search&oid=112602723149&ol=biz&z=16`;
+/** Маршрут с пустой точкой «откуда» и конечной — Station One */
+const yandexRouteUrl = `https://yandex.by/maps/?rtext=~${latitude},${longitude}&rtt=auto&z=16`;
+
+const addressLine = `${site.address.city}, ${site.address.street}`;
 ---
 
 <section id="map" class="section-pad bg-navy border-y border-white/5">
@@ -15,19 +21,29 @@ const yandexWidgetUrl =
         </h2>
         <span class="section-heading-rule" aria-hidden="true"></span>
       </div>
-      <div class="mt-5 font-accent text-base font-medium leading-relaxed text-silver md:text-lg">
-        <address class="not-italic">Гомель, ул. Советская, 29А, 2 этаж.</address>
-        <p class="mt-1">
-          Постройте маршрут в Яндекс Картах и приходите за атмосферой Station One.
+
+      <div class="mt-8 space-y-4">
+        <address class="map-address not-italic">
+          {addressLine}
+        </address>
+        <a
+          href={`tel:${site.phone}`}
+          class="block font-sans text-xl font-semibold tracking-wide text-gold transition hover:text-champagne md:text-2xl"
+        >
+          {site.phoneDisplay}
+        </a>
+        <p class="font-accent text-sm font-medium uppercase tracking-[0.16em] text-silver md:text-base">
+          {site.openingHoursDisplay}
         </p>
       </div>
+
       <a
-        href={yandexMapUrl}
+        href={yandexRouteUrl}
         target="_blank"
         rel="noopener noreferrer"
         class="book-btn mt-8 inline-flex"
       >
-        Открыть карты <span aria-hidden="true">&nbsp;↗</span>
+        Построить маршрут <span aria-hidden="true">&nbsp;↗</span>
       </a>
     </div>
 
@@ -43,3 +59,15 @@ const yandexWidgetUrl =
     </div>
   </div>
 </section>
+
+<style>
+  .map-address {
+    font-family: var(--font-display);
+    font-size: clamp(1.85rem, 4.2vw, 2.75rem);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: 0.01em;
+    color: var(--color-champagne);
+    text-wrap: balance;
+  }
+</style>

@@ -1,8 +1,6 @@
 ---
-import { withBase } from '../data/site';
+import { site, withBase } from '../data/site';
 
-const phone = '+375333335233';
-const phoneDisplay = '+375 33 333-52-33';
 const year = new Date().getFullYear();
 const logo = withBase('/logo.webp');
 
@@ -14,6 +12,29 @@ const links = [
   { id: 'reviews', label: 'Отзывы' },
   { id: 'map', label: 'Как нас найти' },
   { id: 'contacts', label: 'Контакты' },
+];
+
+const socials = [
+  {
+    label: 'Instagram',
+    href: site.social.instagram,
+    icon: 'instagram' as const,
+  },
+  {
+    label: 'Яндекс Карты',
+    href: site.social.yandexOrg,
+    icon: 'yandex' as const,
+  },
+  {
+    label: 'Яндекс Еда',
+    href: site.social.yandexEda,
+    icon: 'yandex' as const,
+  },
+  {
+    label: 'Just Eat',
+    href: site.social.justEat,
+    icon: 'justeat' as const,
+  },
 ];
 ---
 
@@ -53,34 +74,58 @@ const links = [
     </nav>
 
     <div
-      class="order-2 flex items-start justify-between gap-4 text-sm text-silver md:order-3 md:flex-col md:items-end md:justify-start md:gap-2"
+      class="order-2 flex items-start justify-between gap-4 text-sm text-silver md:order-3 md:flex-col md:items-end md:justify-start md:gap-3"
     >
-      <div class="flex flex-col gap-2">
-        <a href={`tel:${phone}`} class="text-gold transition hover:text-champagne">
-          {phoneDisplay}
+      <div class="flex flex-col gap-3 md:items-end">
+        <a href={`tel:${site.phone}`} class="text-gold transition hover:text-champagne">
+          {site.phoneDisplay}
         </a>
-        <a
-          href="https://www.instagram.com/station_one_gomel/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="inline-flex items-center gap-2 transition hover:text-champagne"
-        >
-          <svg
-            class="size-4 shrink-0"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            aria-hidden="true"
-          >
-            <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
-            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-            <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
-          </svg>
-          @station_one_gomel
-        </a>
+
+        <div class="flex flex-col gap-2 md:items-end" aria-label="Соцсети и сервисы">
+          {
+            socials.map((item) => (
+              <a
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 transition hover:text-champagne"
+              >
+                {item.icon === 'instagram' ? (
+                  <svg
+                    class="size-4 shrink-0"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+                  </svg>
+                ) : (
+                  <svg
+                    class="size-4 shrink-0"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                  </svg>
+                )}
+                {item.label}
+              </a>
+            ))
+          }
+        </div>
+
         <p class="text-xs text-silver/60">© {year} Station One Cafe</p>
       </div>
 

@@ -3,10 +3,28 @@ import { withBase } from '../data/site';
 
 const hookah = withBase('/assets/hookah-square-enhanced.webp');
 
-const prices = [
-  { name: 'Classic', price: '25 BYN' },
-  { name: 'Medium', price: '27 BYN' },
-  { name: 'Premium', price: '33 BYN' },
+const items = [
+  {
+    name: 'Classic',
+    price: '25 BYN',
+    lead: 'Мягкий старт вечера',
+    description: 'Классическая сборка: лёгкий дым, чистый аромат и комфортная крепость для спокойной беседы.',
+    notes: ['Мягкий вкус', 'Лёгкий дым', 'Универсально'],
+  },
+  {
+    name: 'Medium',
+    price: '27 BYN',
+    lead: 'Яркий баланс вкуса',
+    description: 'Насыщенная чаша с плотным дымом и выразительным послевкусием — без лишнего перегруза.',
+    notes: ['Насыщенный', 'Плотный дым', 'Яркий аромат'],
+  },
+  {
+    name: 'Premium',
+    price: '33 BYN',
+    lead: 'Премиальная подача',
+    description: 'Отборный табак и аккуратная сборка: глубокий вкус, стойкий аромат и долгий вечер.',
+    notes: ['Премиум', 'Авторский микс', 'Долгое курение'],
+  },
 ];
 ---
 
@@ -35,19 +53,60 @@ const prices = [
         <span class="section-heading-rule" aria-hidden="true"></span>
       </div>
 
-      <ul class="mx-auto mt-10 w-full max-w-[18rem] space-y-5 sm:max-w-sm md:mt-12">
+      <p
+        class="from-smoke mx-auto mt-5 max-w-xl font-accent text-base font-medium leading-relaxed text-silver md:text-lg"
+        style="--smoke-delay: 0.16s"
+      >
+        Три формата — наведите или нажмите, чтобы узнать подробнее
+      </p>
+
+      <ul class="mx-auto mt-10 grid w-full max-w-5xl items-stretch gap-4 sm:grid-cols-3 md:mt-12 md:gap-5">
         {
-          prices.map((item) => (
-            <li
-              class="from-smoke flex w-full items-baseline justify-between gap-6 border-b-[3px] border-white/10 pb-3"
-              style="--smoke-delay: 0.1s"
-            >
-              <span class="text-left text-base font-medium uppercase tracking-[0.22em] text-champagne md:text-lg">
-                {item.name}
-              </span>
-              <span class="shrink-0 text-right font-sans text-2xl font-semibold tracking-normal text-gold md:text-3xl">
-                {item.price}
-              </span>
+          items.map((item, index) => (
+            <li class="from-smoke h-full" style={`--smoke-delay: ${0.22 + index * 0.08}s`}>
+              <button
+                type="button"
+                class="hookah-card group"
+                data-hookah-card
+                aria-expanded="false"
+                aria-controls={`hookah-info-${item.name.toLowerCase()}`}
+              >
+                <span class="hookah-card-glow" aria-hidden="true" />
+
+                <span class="hookah-card-main">
+                  <span class="font-display text-3xl font-semibold tracking-wide text-champagne md:text-4xl">
+                    {item.name}
+                  </span>
+                  <span class="mt-3 block font-sans text-2xl font-semibold text-gold md:text-3xl">
+                    {item.price}
+                  </span>
+                  <span class="mt-4 block font-accent text-xs font-medium uppercase tracking-[0.18em] text-silver/80">
+                    {item.lead}
+                  </span>
+                </span>
+
+                <span
+                  id={`hookah-info-${item.name.toLowerCase()}`}
+                  class="hookah-card-info"
+                >
+                  <span class="hookah-card-info-inner">
+                    <span class="hookah-card-info-title font-display font-semibold text-champagne">
+                      {item.name}
+                    </span>
+                    <span class="hookah-card-info-price mt-1 block font-sans font-semibold text-gold">
+                      {item.price}
+                    </span>
+                    <span class="hookah-card-info-text mt-3 block text-center text-champagne/90">
+                      {item.description}
+                    </span>
+                    <span class="hookah-card-info-notes mt-3">
+                      {item.notes.map((note) => (
+                        <span>{note}</span>
+                      ))}
+                    </span>
+                  </span>
+                </span>
+              </button>
             </li>
           ))
         }
@@ -105,17 +164,192 @@ const prices = [
     transition-delay: 0s;
   }
 
-  html.js-ready [data-hookah]:not(.is-visible) li.from-smoke {
-    transform: translateY(0.85rem);
+  .hookah-card {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 18.5rem;
+    overflow: hidden;
+    border: 1px solid rgb(212 175 55 / 0.22);
+    background: rgb(22 23 26 / 0.55);
+    padding: 1.5rem 1.1rem;
+    text-align: center;
+    color: inherit;
+    cursor: pointer;
+    backdrop-filter: blur(6px);
+    transition:
+      border-color 0.4s ease,
+      background-color 0.4s ease,
+      transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  [data-hookah].is-visible li.from-smoke {
+  @media (min-width: 640px) {
+    .hookah-card {
+      min-height: 20rem;
+    }
+  }
+
+  .hookah-card:hover,
+  .hookah-card:focus-visible,
+  .hookah-card.is-open {
+    border-color: rgb(212 175 55 / 0.55);
+    background: rgb(22 23 26 / 0.78);
+    transform: translateY(-4px);
+  }
+
+  .hookah-card:focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 3px;
+  }
+
+  .hookah-card-glow {
+    pointer-events: none;
+    position: absolute;
+    inset: auto -20% -40% -20%;
+    height: 55%;
+    background: radial-gradient(
+      ellipse at center,
+      rgb(210 159 34 / 0.18) 0%,
+      transparent 70%
+    );
+    opacity: 0;
+    transition: opacity 0.45s ease;
+  }
+
+  .hookah-card:hover .hookah-card-glow,
+  .hookah-card:focus-visible .hookah-card-glow,
+  .hookah-card.is-open .hookah-card-glow {
+    opacity: 1;
+  }
+
+  .hookah-card-main {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    height: 100%;
+    min-height: inherit;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition:
+      opacity 0.35s ease,
+      transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .hookah-card-info {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.15rem 1rem;
+    background: linear-gradient(
+      180deg,
+      rgb(22 23 26 / 0.92) 0%,
+      rgb(22 23 26 / 0.96) 100%
+    );
+    opacity: 0;
+    transform: translateY(0.75rem);
+    pointer-events: none;
+    transition:
+      opacity 0.4s ease,
+      transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .hookah-card-info-inner {
+    display: flex;
+    width: 100%;
+    max-width: 16.5rem;
+    margin-inline: auto;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .hookah-card-info-title {
+    font-size: 1.5rem;
+    line-height: 1.15;
+  }
+
+  .hookah-card-info-price {
+    font-size: 1.2rem;
+    line-height: 1.2;
+  }
+
+  .hookah-card-info-text {
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    text-wrap: balance;
+  }
+
+  .hookah-card-info-notes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.35rem 0.75rem;
+    font-family: var(--font-accent);
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-silver);
+  }
+
+  @media (min-width: 768px) {
+    .hookah-card-info {
+      padding: 1.25rem 1.1rem;
+    }
+
+    .hookah-card-info-title {
+      font-size: 1.65rem;
+    }
+
+    .hookah-card-info-price {
+      font-size: 1.3rem;
+    }
+
+    .hookah-card-info-text {
+      font-size: 0.875rem;
+      line-height: 1.5;
+    }
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .hookah-card:hover .hookah-card-main,
+    .hookah-card:focus-visible .hookah-card-main {
+      opacity: 0;
+      transform: translateY(-0.5rem);
+    }
+
+    .hookah-card:hover .hookah-card-info,
+    .hookah-card:focus-visible .hookah-card-info {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+  }
+
+  .hookah-card.is-open .hookah-card-main {
+    opacity: 0;
+    transform: translateY(-0.5rem);
+  }
+
+  .hookah-card.is-open .hookah-card-info {
+    opacity: 1;
     transform: translateY(0);
+    pointer-events: auto;
   }
 
   @media (prefers-reduced-motion: reduce) {
     .hookah-image,
     .from-smoke,
+    .hookah-card,
+    .hookah-card-main,
+    .hookah-card-info,
+    .hookah-card-glow,
     [data-hookah].is-visible .hookah-image,
     [data-hookah].is-visible .from-smoke,
     html.js-ready [data-hookah]:not(.is-visible) .hookah-image,
@@ -123,6 +357,29 @@ const prices = [
       opacity: 1;
       transform: none;
       transition: none;
+    }
+
+    .hookah-card:hover,
+    .hookah-card:focus-visible,
+    .hookah-card.is-open {
+      transform: none;
+    }
+
+    .hookah-card-info {
+      position: static;
+      opacity: 1;
+      pointer-events: auto;
+      background: transparent;
+      padding: 0;
+      margin-top: 1rem;
+    }
+
+    .hookah-card-main {
+      min-height: 0;
+    }
+
+    .hookah-card {
+      min-height: 0;
     }
   }
 </style>
@@ -151,5 +408,40 @@ const prices = [
     } else {
       setVisible(true);
     }
+
+    const cards = [...section.querySelectorAll<HTMLButtonElement>('[data-hookah-card]')];
+    const fineHover = window.matchMedia('(hover: hover) and (pointer: fine)');
+
+    const closeAll = (except?: HTMLButtonElement) => {
+      cards.forEach((card) => {
+        if (card === except) return;
+        card.classList.remove('is-open');
+        card.setAttribute('aria-expanded', 'false');
+      });
+    };
+
+    cards.forEach((card) => {
+      card.addEventListener('click', () => {
+        if (fineHover.matches) return;
+        const willOpen = !card.classList.contains('is-open');
+        closeAll(card);
+        card.classList.toggle('is-open', willOpen);
+        card.setAttribute('aria-expanded', String(willOpen));
+      });
+
+      card.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && card.classList.contains('is-open')) {
+          card.classList.remove('is-open');
+          card.setAttribute('aria-expanded', 'false');
+        }
+      });
+    });
+
+    document.addEventListener('click', (event) => {
+      if (fineHover.matches) return;
+      const target = event.target as Node | null;
+      if (target && cards.some((card) => card.contains(target))) return;
+      closeAll();
+    });
   }
 </script>

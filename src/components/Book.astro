@@ -36,7 +36,7 @@ const bg = withBase('/assets/621465960_18067678844550093_6426370961459551137_n.w
       время и количество гостей.
     </p>
 
-    <div class="mt-10 flex flex-col items-center gap-5">
+    <div class="mt-10 flex w-full justify-center">
       <a href={`tel:${phone}`} class="book-btn book-btn-lg">
         Забронировать
         <svg
@@ -54,51 +54,6 @@ const bg = withBase('/assets/621465960_18067678844550093_6426370961459551137_n.w
           ></path>
         </svg>
       </a>
-      <button
-        type="button"
-        data-scroll-to="map"
-        class="max-w-xs cursor-pointer border-0 bg-transparent text-sm font-light leading-relaxed text-silver transition hover:text-champagne"
-      >
-        г. Гомель, ул. Советская, 29А<br />
-        2 этаж
-      </button>
-      <a
-        href="https://www.instagram.com/station_one_gomel/"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="inline-flex items-center gap-2 text-sm tracking-wide text-silver transition hover:text-champagne"
-      >
-        <svg
-          class="size-4 shrink-0"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          aria-hidden="true"
-        >
-          <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
-          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-          <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
-        </svg>
-        Instagram @station_one_gomel
-      </a>
     </div>
   </div>
 </section>
-
-<script>
-  const header = document.querySelector<HTMLElement>('[data-header]');
-  document.querySelectorAll<HTMLElement>('#contacts [data-scroll-to]').forEach((el) => {
-    el.addEventListener('click', () => {
-      const id = el.getAttribute('data-scroll-to');
-      if (!id) return;
-      const target = document.getElementById(id);
-      if (!target) return;
-      const headerH = header?.offsetHeight || 72;
-      const y = Math.max(0, window.scrollY + target.getBoundingClientRect().top - headerH - 12);
-      window.scrollTo({ top: y, behavior: 'smooth' });
-    });
-  });
-</script>
