@@ -76,20 +76,18 @@ const strip = [...photos, ...photos];
     overflow-y: hidden;
     width: 100%;
     cursor: grab;
-    scrollbar-width: none;
+    scrollbar-width: thin;
+    scrollbar-color: rgb(210 159 34 / 0.45) transparent;
     -webkit-overflow-scrolling: touch;
     touch-action: pan-x;
+    overscroll-behavior-x: contain;
     mask-image: linear-gradient(
       90deg,
       transparent 0%,
-      #000 4%,
-      #000 96%,
+      #000 3%,
+      #000 97%,
       transparent 100%
     );
-  }
-
-  .gallery-marquee::-webkit-scrollbar {
-    display: none;
   }
 
   .gallery-marquee.is-dragging {
@@ -115,6 +113,7 @@ const strip = [...photos, ...photos];
     display: block;
     color: inherit;
     text-decoration: none;
+    cursor: pointer;
     transition: opacity 0.25s ease;
   }
 
@@ -155,75 +154,153 @@ const strip = [...photos, ...photos];
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let paused = false;
     let dragging = false;
-    let moved = false;
+    let dragActive = false;
+    let suppressClick = false;
     let startX = 0;
     let startScroll = 0;
+    let pointerId: number | null = null;
     let frame = 0;
+    let resumeTimer = 0;
     const speed = 0.55;
-    const dragThreshold = 6;
+    const dragThreshold = 8;
+
+    const halfWidth = () => marquee.scrollWidth / 2;
+
+    const normalizeLoop = () => {
+      const half = halfWidth();
+      if (half <= 0) return;
+      if (marquee.scrollLeft >= half) marquee.scrollLeft -= half;
+      if (marquee.scrollLeft < 0) marquee.scrollLeft += half;
+    };
 
     const tick = () => {
       if (!paused && !dragging && !reduceMotion) {
         marquee.scrollLeft += speed;
-        const half = marquee.scrollWidth / 2;
-        if (half > 0 && marquee.scrollLeft >= half) {
-          marquee.scrollLeft -= half;
-        }
+        normalizeLoop();
       }
       frame = requestAnimationFrame(tick);
     };
 
-    if (!reduceMotion) {
-      frame = requestAnimationFrame(tick);
-    }
+    if (!reduceMotion) frame = requestAnimationFrame(tick);
 
-    marquee.addEventListener('mouseenter', () => {
+    const pause = () => {
       paused = true;
-    });
+      window.clearTimeout(resumeTimer);
+    };
+
+    const scheduleResume = () => {
+      window.clearTimeout(resumeTimer);
+      resumeTimer = window.setTimeout(() => {
+        if (!dragging && !marquee.matches(':hover')) paused = false;
+      }, 900);
+    };
+
+    marquee.addEventListener('mouseenter', pause);
     marquee.addEventListener('mouseleave', () => {
-      if (!dragging) paused = false;
+      if (!dragging) {
+        paused = false;
+      }
     });
+
+    // Trackpad / mouse wheel → horizontal scroll
+    marquee.addEventListener(
+      'wheel',
+      (event) => {
+        const dx = event.deltaX;
+        const dy = event.deltaY;
+        if (Math.abs(dx) < 1 && Math.abs(dy) < 1) return;
+
+        pause();
+        // Prefer vertical wheel as horizontal browse (common for carousels)
+        if (Math.abs(dy) >= Math.abs(dx)) {
+          event.preventDefault();
+          marquee.scrollLeft += dy;
+        }
+        normalizeLoop();
+        scheduleResume();
+      },
+      { passive: false },
+    );
+
+    marquee.addEventListener('scroll', () => {
+      normalizeLoop();
+    }, { passive: true });
 
     marquee.addEventListener('pointerdown', (event) => {
       if (event.pointerType === 'mouse' && event.button !== 0) return;
+      // Touch: let native pan-x scroll work; only pause autoplay
+      if (event.pointerType === 'touch') {
+        pause();
+        return;
+      }
+
       dragging = true;
-      moved = false;
-      paused = true;
+      dragActive = false;
+      suppressClick = false;
       startX = event.clientX;
       startScroll = marquee.scrollLeft;
-      marquee.classList.add('is-dragging');
-      marquee.setPointerCapture(event.pointerId);
+      pointerId = event.pointerId;
+      pause();
     });
 
     marquee.addEventListener('pointermove', (event) => {
-      if (!dragging) return;
+      if (!dragging || event.pointerId !== pointerId) return;
       const dx = event.clientX - startX;
-      if (Math.abs(dx) > dragThreshold) moved = true;
+
+      if (!dragActive) {
+        if (Math.abs(dx) < dragThreshold) return;
+        dragActive = true;
+        suppressClick = true;
+        marquee.classList.add('is-dragging');
+        marquee.setPointerCapture(event.pointerId);
+      }
+
       marquee.scrollLeft = startScroll - dx;
+      normalizeLoop();
     });
 
     const endDrag = (event: PointerEvent) => {
-      if (!dragging) return;
+      if (!dragging || event.pointerId !== pointerId) return;
       dragging = false;
+      pointerId = null;
       marquee.classList.remove('is-dragging');
       if (marquee.hasPointerCapture(event.pointerId)) {
         marquee.releasePointerCapture(event.pointerId);
       }
-      const over = marquee.matches(':hover');
-      paused = over;
+
+      if (marquee.matches(':hover')) {
+        paused = true;
+      } else {
+        scheduleResume();
+      }
+
+      // Keep suppressClick through the following click event
+      if (suppressClick) {
+        window.setTimeout(() => {
+          suppressClick = false;
+        }, 0);
+      }
     };
 
     marquee.addEventListener('pointerup', endDrag);
     marquee.addEventListener('pointercancel', endDrag);
 
-    marquee.querySelectorAll<HTMLAnchorElement>('[data-gallery-link]').forEach((link) => {
-      link.addEventListener('click', (event) => {
-        if (moved) {
-          event.preventDefault();
-        }
-      });
-    });
+    marquee.addEventListener(
+      'click',
+      (event) => {
+        if (!suppressClick) return;
+        const link = (event.target as HTMLElement | null)?.closest('a[data-gallery-link]');
+        if (link) event.preventDefault();
+      },
+      true,
+    );
 
-    window.addEventListener('beforeunload', () => cancelAnimationFrame(frame));
+    // After touch scroll ends, resume autoplay if not hovered
+    marquee.addEventListener('touchend', () => scheduleResume(), { passive: true });
+
+    window.addEventListener('beforeunload', () => {
+      cancelAnimationFrame(frame);
+      window.clearTimeout(resumeTimer);
+    });
   }
 </script>
