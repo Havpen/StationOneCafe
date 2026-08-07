@@ -74,6 +74,7 @@ const links = [
     inset-inline: 0;
     top: 0;
     z-index: 50;
+    pointer-events: none;
   }
 
   .site-header-bar {
@@ -82,6 +83,25 @@ const links = [
     border-bottom: 1px solid rgb(255 255 255 / 0.05);
     background: rgb(33 34 38 / 0.7);
     backdrop-filter: blur(12px);
+    opacity: 0;
+    transform: translateY(-100%);
+    transition:
+      opacity 0.35s ease,
+      transform 0.35s ease;
+  }
+
+  .site-header.is-visible {
+    pointer-events: auto;
+  }
+
+  .site-header.is-visible .site-header-bar,
+  .site-header.is-open .site-header-bar {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .site-header.is-open {
+    pointer-events: auto;
   }
 
   .site-header-inner {
@@ -533,5 +553,25 @@ const links = [
         setOpen(false);
       }
     });
+
+    // Шапка появляется, когда кнопка «Забронировать стол» доезжает до верха
+    const heroBook = document.querySelector<HTMLElement>('[data-hero-book]');
+    const syncHeaderVisibility = () => {
+      if (header.classList.contains('is-open')) {
+        header.classList.add('is-visible');
+        return;
+      }
+      if (!heroBook) {
+        header.classList.add('is-visible');
+        return;
+      }
+      const triggerY = header.offsetHeight || 72;
+      const reached = heroBook.getBoundingClientRect().top <= triggerY + 12;
+      header.classList.toggle('is-visible', reached);
+    };
+
+    syncHeaderVisibility();
+    window.addEventListener('scroll', syncHeaderVisibility, { passive: true });
+    window.addEventListener('resize', syncHeaderVisibility);
   }
 </script>
