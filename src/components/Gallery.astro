@@ -45,7 +45,6 @@ const strip = [...photos, ...photos];
             target="_blank"
             rel="noopener noreferrer"
             class="gallery-item"
-            data-gallery-link
             aria-label={
               index < photos.length
                 ? `Station One Cafe — фото ${index + 1}, открыть Instagram`
@@ -71,16 +70,12 @@ const strip = [...photos, ...photos];
 </section>
 
 <style>
+  /* Как полоска-лента: overflow hidden + translate, без скроллбара */
   .gallery-marquee {
-    overflow-x: auto;
-    overflow-y: hidden;
+    overflow: hidden;
     width: 100%;
     cursor: grab;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    -webkit-overflow-scrolling: touch;
-    touch-action: pan-x;
-    overscroll-behavior-x: contain;
+    touch-action: pan-y;
     mask-image: linear-gradient(
       90deg,
       transparent 0%,
@@ -88,10 +83,6 @@ const strip = [...photos, ...photos];
       #000 97%,
       transparent 100%
     );
-  }
-
-  .gallery-marquee::-webkit-scrollbar {
-    display: none;
   }
 
   .gallery-marquee.is-dragging {
@@ -105,6 +96,7 @@ const strip = [...photos, ...photos];
     padding-block: 0.25rem;
     padding-inline: 1.25rem;
     user-select: none;
+    will-change: transform;
   }
 
   .gallery-item {
@@ -116,11 +108,7 @@ const strip = [...photos, ...photos];
     display: block;
     color: inherit;
     text-decoration: none;
-    cursor: grab;
-  }
-
-  .gallery-marquee.is-dragging .gallery-item {
-    cursor: grabbing;
+    cursor: inherit;
   }
 
   @media (min-width: 768px) {
@@ -148,114 +136,121 @@ const strip = [...photos, ...photos];
     object-fit: cover;
     pointer-events: none;
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gallery-track {
+      transform: none !important;
+    }
+  }
 </style>
 
 <script>
-  const marquee = document.querySelector<HTMLElement>('[data-gallery-marquee]');
-  if (!marquee) {
+  const root = document.querySelector<HTMLElement>('[data-gallery-marquee]');
+  const track = document.querySelector<HTMLElement>('[data-gallery-track]');
+  if (!root || !track) {
     // no-op
   } else {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const speed = 0.4125; // was 0.55, −25%
+    const speed = 0.45;
+    let x = 0;
     let paused = false;
+    let dragging = false;
+    let moved = 0;
+    let startX = 0;
+    let startOffset = 0;
     let frame = 0;
 
-    // mouse drag state
-    let down = false;
-    let dragged = false;
-    let startX = 0;
-    let startScroll = 0;
+    const half = () => track.scrollWidth / 2;
 
-    const loopPoint = () => marquee.scrollWidth / 2;
-
-    const wrap = () => {
-      const half = loopPoint();
-      if (half <= 0) return;
-      while (marquee.scrollLeft >= half) marquee.scrollLeft -= half;
-      while (marquee.scrollLeft < 0) marquee.scrollLeft += half;
-    };
-
-    const autoplay = () => {
-      if (!paused && !down && !reduceMotion) {
-        marquee.scrollLeft += speed;
-        wrap();
+    const apply = () => {
+      const w = half();
+      if (w > 0) {
+        while (x <= -w) x += w;
+        while (x > 0) x -= w;
       }
-      frame = requestAnimationFrame(autoplay);
+      track.style.transform = `translate3d(${x}px, 0, 0)`;
     };
 
-    if (!reduceMotion) frame = requestAnimationFrame(autoplay);
+    const tick = () => {
+      if (!paused && !dragging && !reduceMotion) {
+        x -= speed;
+        apply();
+      }
+      frame = requestAnimationFrame(tick);
+    };
 
-    marquee.addEventListener('mouseenter', () => {
+    if (!reduceMotion) frame = requestAnimationFrame(tick);
+
+    root.addEventListener('mouseenter', () => {
       paused = true;
     });
 
-    marquee.addEventListener('mouseleave', () => {
+    root.addEventListener('mouseleave', () => {
       paused = false;
-      down = false;
-      marquee.classList.remove('is-dragging');
+      dragging = false;
+      root.classList.remove('is-dragging');
     });
 
-    // Desktop: click-drag left/right
-    marquee.addEventListener('mousedown', (event) => {
-      if (event.button !== 0) return;
-      down = true;
-      dragged = false;
-      paused = true;
-      startX = event.clientX;
-      startScroll = marquee.scrollLeft;
-      marquee.classList.add('is-dragging');
+    const onDown = (clientX: number) => {
+      dragging = true;
+      moved = 0;
+      startX = clientX;
+      startOffset = x;
+      root.classList.add('is-dragging');
+    };
+
+    const onMove = (clientX: number) => {
+      if (!dragging) return;
+      const dx = clientX - startX;
+      moved = Math.max(moved, Math.abs(dx));
+      x = startOffset + dx;
+      apply();
+    };
+
+    const onUp = () => {
+      if (!dragging) return;
+      dragging = false;
+      root.classList.remove('is-dragging');
+      paused = root.matches(':hover');
+    };
+
+    root.addEventListener('mousedown', (e) => {
+      if (e.button !== 0) return;
+      e.preventDefault();
+      onDown(e.clientX);
     });
 
-    window.addEventListener('mousemove', (event) => {
-      if (!down) return;
-      const dx = event.clientX - startX;
-      if (Math.abs(dx) > 5) dragged = true;
-      marquee.scrollLeft = startScroll - dx;
-      wrap();
-    });
+    window.addEventListener('mousemove', (e) => onMove(e.clientX));
+    window.addEventListener('mouseup', onUp);
 
-    window.addEventListener('mouseup', () => {
-      if (!down) return;
-      down = false;
-      marquee.classList.remove('is-dragging');
-      // stay paused while cursor is over gallery
-      paused = marquee.matches(':hover');
-    });
-
-    // Touch: native horizontal swipe; pause while touching
-    marquee.addEventListener(
+    root.addEventListener(
       'touchstart',
-      () => {
-        paused = true;
+      (e) => {
+        if (e.touches.length !== 1) return;
+        onDown(e.touches[0].clientX);
       },
       { passive: true },
     );
 
-    marquee.addEventListener(
-      'touchend',
-      () => {
-        window.setTimeout(() => {
-          if (!marquee.matches(':hover')) paused = false;
-        }, 700);
+    root.addEventListener(
+      'touchmove',
+      (e) => {
+        if (!dragging || e.touches.length !== 1) return;
+        onMove(e.touches[0].clientX);
       },
       { passive: true },
     );
 
-    marquee.addEventListener(
-      'scroll',
-      () => {
-        wrap();
-      },
-      { passive: true },
-    );
+    root.addEventListener('touchend', onUp);
+    root.addEventListener('touchcancel', onUp);
 
-    // Click opens Instagram only if it wasn't a drag
-    marquee.addEventListener(
+    // клик = Instagram, если не тянули
+    root.addEventListener(
       'click',
-      (event) => {
-        if (!dragged) return;
-        event.preventDefault();
-        event.stopPropagation();
+      (e) => {
+        if (moved < 8) return;
+        e.preventDefault();
+        e.stopPropagation();
       },
       true,
     );
