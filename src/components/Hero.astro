@@ -11,6 +11,7 @@ const hero = withBase('/assets/hero.webp');
       src={hero}
       alt="Интерьер Station One Cafe"
       class="animate-ken h-full w-full object-cover object-center"
+      data-hero-bg
       width="1920"
       height="1080"
       decoding="async"
@@ -202,3 +203,31 @@ const hero = withBase('/assets/hero.webp');
     }
   }
 </style>
+
+<script>
+  const hero = document.querySelector<HTMLElement>('[data-hero]');
+  const bg = document.querySelector<HTMLElement>('[data-hero-bg]');
+  if (hero && bg && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const restartZoom = () => {
+      bg.classList.remove('is-zooming');
+      void bg.offsetWidth;
+      bg.classList.add('is-zooming');
+    };
+
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            restartZoom();
+          } else {
+            bg.classList.remove('is-zooming');
+          }
+        },
+        { threshold: 0.2 },
+      );
+      observer.observe(hero);
+    } else {
+      restartZoom();
+    }
+  }
+</script>

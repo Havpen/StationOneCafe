@@ -129,7 +129,7 @@
     transform: scale(1);
   }
   to {
-    transform: scale(1.06);
+    transform: scale(1.25);
   }
 }
 
@@ -142,7 +142,21 @@
 }
 
 .animate-ken {
-  animation: ken-burns 18s ease-out forwards;
+  transform: scale(1);
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.animate-ken.is-zooming {
+  animation: ken-burns 55s linear forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-ken,
+  .animate-ken.is-zooming {
+    animation: none;
+    transform: scale(1.08);
+  }
 }
 
 .delay-1 {
