@@ -12,6 +12,12 @@
 @import "@fontsource/outfit/500.css";
 @import "@fontsource/outfit/600.css";
 @import "@fontsource/outfit/700.css";
+@import "@fontsource/unbounded/cyrillic-500.css";
+@import "@fontsource/unbounded/cyrillic-600.css";
+@import "@fontsource/unbounded/cyrillic-700.css";
+@import "@fontsource/unbounded/latin-500.css";
+@import "@fontsource/unbounded/latin-600.css";
+@import "@fontsource/unbounded/latin-700.css";
 
 @theme {
   --color-navy: #212226;
@@ -23,6 +29,7 @@
 
   --font-display: "Cormorant Garamond", Georgia, serif;
   --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-accent: "Unbounded", ui-sans-serif, system-ui, sans-serif;
 }
 
 @layer base {
@@ -58,6 +65,10 @@
 @layer utilities {
   .font-display {
     font-family: var(--font-display);
+  }
+
+  .font-accent {
+    font-family: var(--font-accent);
   }
 
   .text-balance {
@@ -226,10 +237,12 @@
 
 .section-heading {
   display: flex;
-  width: fit-content;
+  width: 100%;
   max-width: 100%;
+  margin-inline: auto;
   flex-direction: column;
-  align-items: stretch;
+  align-items: center;
+  text-align: center;
   box-sizing: border-box;
 }
 
@@ -241,6 +254,7 @@
   align-items: center;
 }
 
+.section-heading .section-heading-rule,
 .section-heading-center .section-heading-rule {
   width: min(100%, 18rem);
 }

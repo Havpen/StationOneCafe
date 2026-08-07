@@ -7,13 +7,13 @@ const year = new Date().getFullYear();
 const logo = withBase('/logo.webp');
 
 const links = [
-  { href: '#kitchen', label: 'Кухня' },
-  { href: '#gallery', label: 'Галерея' },
-  { href: '#hookah', label: 'Кальяны' },
-  { href: '#delivery', label: 'Доставка' },
-  { href: '#reviews', label: 'Отзывы' },
-  { href: '#map', label: 'Как нас найти' },
-  { href: '#contacts', label: 'Контакты' },
+  { id: 'kitchen', label: 'Кухня' },
+  { id: 'gallery', label: 'Галерея' },
+  { id: 'hookah', label: 'Кальяны' },
+  { id: 'delivery', label: 'Доставка' },
+  { id: 'reviews', label: 'Отзывы' },
+  { id: 'map', label: 'Как нас найти' },
+  { id: 'contacts', label: 'Контакты' },
 ];
 ---
 
@@ -22,7 +22,7 @@ const links = [
     class="mx-auto flex max-w-7xl flex-col gap-6 px-5 py-8 md:flex-row md:items-start md:justify-between md:gap-12 md:px-10 md:py-10"
   >
     <div class="order-1 hidden md:order-1 md:block">
-      <a href="#top" class="inline-block">
+      <button type="button" class="inline-block border-0 bg-transparent p-0" data-scroll-to="top" aria-label="Наверх">
         <img
           src={logo}
           alt="Station One Cafe"
@@ -32,18 +32,22 @@ const links = [
           loading="lazy"
           decoding="async"
         />
-      </a>
+      </button>
     </div>
 
     <nav
-      class="order-1 flex flex-wrap gap-x-6 gap-y-3 text-sm text-silver md:order-2 md:max-w-md md:justify-center"
+      class="order-1 flex flex-wrap justify-center gap-x-6 gap-y-3 text-sm text-silver md:order-2 md:max-w-md"
       aria-label="Навигация"
     >
       {
         links.map((link) => (
-          <a href={link.href} class="transition hover:text-champagne">
+          <button
+            type="button"
+            class="cursor-pointer border-0 bg-transparent p-0 text-silver transition hover:text-champagne"
+            data-scroll-to={link.id}
+          >
             {link.label}
-          </a>
+          </button>
         ))
       }
     </nav>
@@ -81,7 +85,7 @@ const links = [
       </div>
 
       <div class="shrink-0 text-right md:hidden">
-        <a href="#top" class="inline-block">
+        <button type="button" class="inline-block border-0 bg-transparent p-0" data-scroll-to="top" aria-label="Наверх">
           <img
             src={logo}
             alt="Station One Cafe"
@@ -91,7 +95,7 @@ const links = [
             loading="lazy"
             decoding="async"
           />
-        </a>
+        </button>
       </div>
     </div>
   </div>
@@ -102,3 +106,18 @@ const links = [
     </p>
   </div>
 </footer>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-header]');
+  document.querySelectorAll<HTMLElement>('footer [data-scroll-to]').forEach((el) => {
+    el.addEventListener('click', () => {
+      const id = el.getAttribute('data-scroll-to');
+      if (!id) return;
+      const target = document.getElementById(id);
+      if (!target) return;
+      const headerH = header?.offsetHeight || 72;
+      const y = Math.max(0, window.scrollY + target.getBoundingClientRect().top - headerH - 12);
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    });
+  });
+</script>

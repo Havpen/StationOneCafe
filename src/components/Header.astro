@@ -4,20 +4,20 @@ import { withBase } from '../data/site';
 const phone = '+375333335233';
 
 const links = [
-  { href: '#kitchen', label: 'Кухня' },
-  { href: '#gallery', label: 'Галерея' },
-  { href: '#hookah', label: 'Кальяны' },
-  { href: '#delivery', label: 'Доставка' },
-  { href: '#reviews', label: 'Отзывы' },
-  { href: '#map', label: 'Как нас найти' },
-  { href: '#contacts', label: 'Контакты' },
+  { id: 'kitchen', label: 'Кухня' },
+  { id: 'gallery', label: 'Галерея' },
+  { id: 'hookah', label: 'Кальяны' },
+  { id: 'delivery', label: 'Доставка' },
+  { id: 'reviews', label: 'Отзывы' },
+  { id: 'map', label: 'Как нас найти' },
+  { id: 'contacts', label: 'Контакты' },
 ];
 ---
 
 <header class="site-header" data-header>
   <div class="site-header-bar">
     <div class="site-header-inner">
-      <a href="#top" class="site-header-logo">
+      <button type="button" class="site-header-logo" data-scroll-to="top" aria-label="Наверх">
         <img
           src={withBase('/logo-mini.webp')}
           alt="Station One Cafe"
@@ -25,7 +25,7 @@ const links = [
           height="80"
           decoding="async"
         />
-      </a>
+      </button>
 
       <button
         type="button"
@@ -49,9 +49,9 @@ const links = [
       <nav class="menu-links" aria-label="Основная навигация">
         {
           links.map((link) => (
-            <a href={link.href} class="menu-item" data-menu-link tabindex="-1">
+            <button type="button" class="menu-item" data-menu-link data-scroll-to={link.id} tabindex="-1">
               {link.label}
-            </a>
+            </button>
           ))
         }
       </nav>
@@ -109,6 +109,11 @@ const links = [
     display: flex;
     flex-shrink: 0;
     align-items: center;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
   }
 
   .site-header-logo img {
@@ -270,7 +275,11 @@ const links = [
     flex: 0 0 auto;
     min-height: 3.85rem;
     width: 100%;
+    margin: 0;
     padding: 1.1rem 1rem;
+    border: none;
+    background: transparent;
+    cursor: pointer;
     font-family: var(--font-display);
     font-size: clamp(1.5rem, 5.5vw, 1.875rem);
     line-height: 1.1;
@@ -384,12 +393,10 @@ const links = [
   if (header && burger && menu) {
     let closeTimer = 0;
     let lockedY = 0;
-    let pendingHash: string | null = null;
+    let pendingId: string | null = null;
 
     const lockScroll = () => {
       lockedY = window.scrollY;
-      // Desktop only: reserve scrollbar width so layout doesn't jump.
-      // Phones have overlay scrollbars (width 0) — no strip needed.
       const touchUI = window.matchMedia('(hover: none), (pointer: coarse)').matches;
       const sbw = touchUI ? 0 : Math.max(0, window.innerWidth - document.documentElement.clientWidth);
       if (sbw > 0) {
@@ -422,20 +429,26 @@ const links = [
       });
     };
 
-    /** Target Y while body is still scroll-locked */
-    const targetYFromHash = (hash: string) => {
-      const id = hash.replace(/^#/, '');
+    const targetYFromId = (id: string) => {
       const target = document.getElementById(id);
       if (!target) return null;
       const headerH = header.offsetHeight || 72;
       return Math.max(0, lockedY + target.getBoundingClientRect().top - headerH - 12);
     };
 
+    const scrollToId = (id: string) => {
+      const target = document.getElementById(id);
+      if (!target) return;
+      const headerH = header.offsetHeight || 72;
+      const y = Math.max(0, window.scrollY + target.getBoundingClientRect().top - headerH - 12);
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    };
+
     const setOpen = (open: boolean) => {
       window.clearTimeout(closeTimer);
 
       if (open) {
-        pendingHash = null;
+        pendingId = null;
         lockScroll();
         menu.classList.add('is-mounted');
         menu.setAttribute('aria-hidden', 'false');
@@ -451,20 +464,18 @@ const links = [
         menu.setAttribute('aria-hidden', 'true');
         menuLinks.forEach((link) => link.setAttribute('tabindex', '-1'));
 
-        const hash = pendingHash;
-        pendingHash = null;
+        const id = pendingId;
+        pendingId = null;
 
         closeTimer = window.setTimeout(() => {
           if (header.classList.contains('is-open')) return;
 
           menu.classList.remove('is-mounted');
 
-          if (hash) {
-            const y = targetYFromHash(hash);
-            // Stay at current place, then smooth-scroll to the section
+          if (id) {
+            const y = targetYFromId(id);
             unlockScroll(lockedY);
             if (y != null) {
-              history.pushState(null, '', hash);
               requestAnimationFrame(() => {
                 window.scrollTo({ top: y, behavior: 'smooth' });
               });
@@ -486,6 +497,7 @@ const links = [
     closeTargets.forEach((el) => {
       el.addEventListener('click', (event) => {
         const href = el.getAttribute('href');
+        const scrollId = el.getAttribute('data-scroll-to');
 
         if (href?.startsWith('tel:')) {
           event.preventDefault();
@@ -496,14 +508,22 @@ const links = [
           return;
         }
 
-        if (href?.startsWith('#')) {
+        if (scrollId) {
           event.preventDefault();
-          pendingHash = href;
+          pendingId = scrollId;
           setOpen(false);
           return;
         }
 
         setOpen(false);
+      });
+    });
+
+    header.querySelectorAll<HTMLElement>('[data-scroll-to]').forEach((el) => {
+      if (el.hasAttribute('data-menu-link')) return;
+      el.addEventListener('click', () => {
+        const id = el.getAttribute('data-scroll-to');
+        if (id) scrollToId(id);
       });
     });
 
