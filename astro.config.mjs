@@ -2,14 +2,9 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
-/** GitHub Actions → project Pages; Netlify / local → site root */
-const isGitHubPages = process.env.GITHUB_ACTIONS === 'true';
-
-const SITE = isGitHubPages
-  ? 'https://havpen.github.io'
-  : 'https://stationonecafe.netlify.app';
-
-const BASE = isGitHubPages ? '/StationOneCafe' : '/';
+/** GitHub Pages project site — only host we use right now */
+const SITE = 'https://havpen.github.io';
+const BASE = '/StationOneCafe';
 
 export default defineConfig({
   site: SITE,
