@@ -28,10 +28,8 @@ const home = withBase('/');
       </a>
     </div>
     <nav class="mt-12 flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm text-silver" aria-label="Разделы сайта">
-      <a href={`${home}#kitchen`} class="hover:text-champagne">Кухня</a>
-      <a href={`${home}#delivery`} class="hover:text-champagne">Доставка</a>
-      <a href={`${home}#map`} class="hover:text-champagne">Как нас найти</a>
-      <a href={`${home}#contacts`} class="hover:text-champagne">Бронь</a>
+      <a href={home} class="hover:text-champagne">На главную</a>
+      <a href={`tel:${site.phone}`} class="hover:text-champagne">Позвонить</a>
     </nav>
     <p class="mt-8 text-xs text-silver/50">{SITE_URL}</p>
   </main>

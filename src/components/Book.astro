@@ -1,7 +1,6 @@
 ---
-import { withBase } from '../data/site';
+import { withBase, site } from '../data/site';
 
-const phone = '+375333335233';
 const bg = withBase('/assets/621465960_18067678844550093_6426370961459551137_n.webp');
 ---
 
@@ -15,79 +14,45 @@ const bg = withBase('/assets/621465960_18067678844550093_6426370961459551137_n.w
       height="1080"
       loading="lazy"
     />
-    <div class="absolute inset-0 bg-navy-deep/88"></div>
+    <div class="absolute inset-0 bg-navy/88"></div>
     <div
       class="absolute inset-0 bg-gradient-to-br from-gold-deep/20 via-transparent to-transparent"
     >
     </div>
   </div>
 
-  <div class="section-pad relative z-10 mx-auto max-w-7xl">
-    <div class="max-w-2xl">
-      <p class="text-xs font-medium uppercase tracking-[0.3em] text-gold">Бронь</p>
-      <div class="section-heading mt-4">
-        <h2
-          class="section-heading-gold font-display text-4xl font-semibold leading-tight md:text-6xl"
-        >
-          Забронируйте стол одним звонком
-        </h2>
-        <span class="section-heading-rule" aria-hidden="true"></span>
-      </div>
-      <p class="mt-5 max-w-lg text-base font-light leading-relaxed text-silver">
-        Администратор примет заявку по телефону — быстро и удобно. Назовите дату,
-        время и количество гостей.
-      </p>
-
-      <div class="mt-10 flex flex-col items-start gap-5">
-        <div class="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-6">
-          <a href={`tel:${phone}`} class="book-btn book-btn-lg shrink-0">
-            Забронировать
-            <svg
-              class="size-5"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true"
-            >
-              <path
-                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"
-              ></path>
-            </svg>
-          </a>
-          <a
-            href="#map"
-            class="max-w-xs text-sm font-light leading-relaxed text-silver transition hover:text-champagne"
-          >
-            г. Гомель, ул. Советская, 29А<br />
-            2 этаж
-          </a>
-        </div>
-        <a
-          href="https://www.instagram.com/station_one_gomel/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="inline-flex items-center gap-2 text-sm tracking-wide text-silver transition hover:text-champagne"
-        >
-          <svg
-            class="size-4 shrink-0"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            aria-hidden="true"
-          >
-            <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
-            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-            <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
-          </svg>
-          Instagram @station_one_gomel
-        </a>
-      </div>
+  <div class="section-pad relative z-10 mx-auto flex max-w-7xl flex-col items-center text-center">
+    <p class="text-xs font-medium uppercase tracking-[0.3em] text-gold">Бронь</p>
+    <div class="section-heading section-heading-center mt-4">
+      <h2
+        class="section-heading-gold font-display text-4xl font-bold leading-tight md:text-6xl"
+      >
+        Забронируйте стол одним звонком
+      </h2>
+      <span class="section-heading-rule" aria-hidden="true"></span>
     </div>
+    <p class="mt-5 max-w-lg text-base font-light leading-relaxed text-silver">
+      Назовите <span class="text-accent">дату</span>,
+      <span class="text-accent">время</span> и
+      <span class="text-accent">количество гостей</span> — администратор подтвердит бронь.
+    </p>
+
+    <a href={`tel:${site.phone}`} class="book-btn book-btn-lg mt-10">
+      {site.phoneDisplay}
+      <svg
+        class="size-5"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path
+          d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"
+        ></path>
+      </svg>
+    </a>
   </div>
 </section>

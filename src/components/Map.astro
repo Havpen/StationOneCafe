@@ -1,34 +1,58 @@
 ---
-const yandexMapUrl = 'https://yandex.by/maps/-/CTCHBF1p';
+import { site } from '../data/site';
+
+/** Opens Yandex Maps route planner with restaurant as destination */
+const navigatorUrl =
+  'https://yandex.by/maps/?rtext=~52.4347,31.0095&rtt=auto';
 const yandexWidgetUrl =
   'https://yandex.by/map-widget/v1/?ll=31.0095%2C52.4347&mode=search&oid=112602723149&ol=biz&z=16';
 ---
 
 <section id="map" class="section-pad bg-navy border-y border-white/5">
-  <div class="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
+  <div class="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
     <div class="mx-auto max-w-xl text-center lg:mx-0 lg:text-left">
       <p class="text-xs font-medium uppercase tracking-[0.3em] text-gold">Локация</p>
       <div class="section-heading mx-auto mt-4 lg:mx-0">
         <h2
-          class="section-heading-gold font-display text-4xl font-semibold leading-tight md:text-5xl"
+          class="section-heading-gold font-display text-4xl font-bold leading-tight md:text-5xl"
         >
-          Как нас найти в Гомеле
+          Как нас найти
         </h2>
         <span class="section-heading-rule" aria-hidden="true"></span>
       </div>
-      <div class="mt-5 text-base font-light leading-relaxed text-silver">
-        <address class="not-italic">Гомель, ул. Советская, 29А, 2 этаж.</address>
-        <p class="mt-1">
-          Постройте маршрут в Яндекс Картах и приходите за атмосферой Station One.
-        </p>
-      </div>
+
       <a
-        href={yandexMapUrl}
+        href={navigatorUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="mt-8 block transition hover:opacity-90"
+      >
+        <address
+          class="not-italic font-display text-3xl font-black leading-tight tracking-tight text-champagne md:text-4xl lg:text-5xl"
+        >
+          г.&nbsp;Гомель,<br />
+          ул.&nbsp;Советская,&nbsp;29А<br />
+          <span class="text-gold">2&nbsp;этаж</span>
+        </address>
+      </a>
+
+      <div class="mt-8 space-y-2 text-base text-silver md:text-lg">
+        <a
+          href={`tel:${site.phone}`}
+          class="block font-semibold tracking-wide text-gold transition hover:text-champagne"
+        >
+          {site.phoneDisplay}
+        </a>
+        <p class="font-medium text-champagne/90">{site.openingHoursDisplay}</p>
+      </div>
+
+      <a
+        href={navigatorUrl}
         target="_blank"
         rel="noopener noreferrer"
         class="book-btn mt-8 inline-flex"
       >
-        Открыть карты <span aria-hidden="true">&nbsp;↗</span>
+        Построить маршрут <span aria-hidden="true">&nbsp;↗</span>
       </a>
     </div>
 
