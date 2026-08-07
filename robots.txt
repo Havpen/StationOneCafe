@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+Disallow: /404
+Disallow: /404.html
+
+Sitemap: https://havpen.github.io/StationOneCafe/sitemap-index.xml
