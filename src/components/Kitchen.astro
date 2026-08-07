@@ -59,22 +59,10 @@ const dishes = [
               loading="lazy"
             />
             <div
-              class:list={[
-                'pointer-events-none absolute inset-0',
-                index === 1
-                  ? 'bg-gradient-to-b from-navy-deep/55 via-navy-deep/35 to-navy-deep/70'
-                  : 'bg-gradient-to-br from-navy-deep/75 via-navy-deep/25 to-transparent',
-              ]}
+              class="pointer-events-none absolute inset-0 bg-gradient-to-b from-navy-deep/50 via-navy-deep/30 to-navy-deep/65"
               aria-hidden="true"
             />
-            <figcaption
-              class:list={[
-                'kitchen-caption absolute z-10 px-4',
-                index === 1
-                  ? 'inset-0 flex items-center justify-center text-center'
-                  : 'left-0 top-0 pt-5 text-left',
-              ]}
-            >
+            <figcaption class="kitchen-caption absolute inset-0 z-10 flex items-center justify-center px-4 text-center">
               <span class="font-display text-2xl font-semibold tracking-wide text-champagne md:text-3xl">
                 {dish.label}
               </span>
